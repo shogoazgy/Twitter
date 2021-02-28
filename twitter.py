@@ -96,6 +96,7 @@ class TweetMining:
         wc = WordCloud(background_color='white', font_path=font_path, stopwords=stop_words).generate(words)
         wc.to_file(img_file)
         return
+
 if __name__=='__main__':
     api = TwitterClient()
     tweets = api.search_tweets(query='えきねっと', count=1500)
