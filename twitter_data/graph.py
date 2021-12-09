@@ -6,7 +6,8 @@ import leidenalg as la
 import igraph
 import requests
 import matplotlib.pyplot as plt
-
+import time
+import os
 def build_network(rt_users_path, save_filename='graph'):
     with open(rt_users_path, 'r') as f:
         rt_user_list = [s.strip() for s in f.readlines()]
@@ -15,8 +16,8 @@ def build_network(rt_users_path, save_filename='graph'):
     to_from_freq_list = []
     del rt_user_list
     for k in c.most_common():
-        if k[1] <= 1:
-            break
+        #if k[1] <= 1:
+        #    break
         to_from_freq = k[0].split(',')
         #to_from_freq[0], to_from_freq[1] = to_from_freq[1], to_from_freq[0]
         to_from_freq.append(k[1])
@@ -109,17 +110,45 @@ def sort_max_print(subg, centrality, guest_token, len=10):
         ind = centrality.index(cen_sorted[i])
         print(id_to_screen_name(subg.vs[ind]['name'], guest_token=guest_token))
 
+def walk_dir(path_origin, since, until):
+    paths = []
+    flag = 0
+    for pathname, dirnames, filenames in os.walk(path_origin):
+        for filename in sorted(filenames, key=str):
+            if flag:
+                path = os.path.join(pathname, filename)
+                paths.append(path)
+                print(filename)
+                if filename[:10] == until:
+                    flag = 0
+                    break
+            elif filename[:10] == since:
+                flag = 1
+                path = os.path.join(pathname, filename)
+                paths.append(path)
+                print(filename)
+    return paths
+
 
 if __name__ == "__main__":
-    g = Graph.Read_GML('2021_mar_1_rp_1_clusters')
-    
+    paths = walk_dir('/Users/shougo/Downloads/data/str01_03/twitter/shohei/result/PFTqp4cunv2kwvy8rsp_qp4cu7c1kwwyyveo', '2020-05-01', '2020-06-30')
+
+    """
+    #g = Graph.Read_GML('2021_mar_1')
+    g = build_network('rt_users_jan.txt')
+    summary(g)
+    #g = build_network('rt_users_2020_apr.txt')
+    p = clustering(g)
+    g.vs['cluster'] = p.membership
+    save_gml(g, '2021_jan_1_clusters')
     gt = get_guest_token()
     for i in range(11):
         print('\nクラスタ:' + str(i))
         #sub = Graph.Read_GML('new_year_2_rp_1_cluster_' + str(i))
-        sub = subgraph(g, g.vs.select(lambda vertex : vertex['cluster'] == i))
+        sub = subgraph(g, p[i])
         strength = sub.strength(sub.vs, mode='in', loops=False, weights=sub.es['weight'])
         sort_max_print(sub, strength, gt, len=7)
+    
     fig = plt.figure(figsize=(8, 6))
     colors = ['k', 'k', 'k', 'r', 'g', 'b', 'k', 'c', 'k', 'k', 'k','k']
     c = []
@@ -167,7 +196,7 @@ if __name__ == "__main__":
     #g_20_apr_2 = Graph.Read_GML('2020_apr_1_cluster_0')
     c_i = 3
     n_i = 9
-
+    """
 
     """
     g_20_set_list = []
