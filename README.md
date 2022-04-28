@@ -1,38 +1,5 @@
 # Twitter
 Twitter全量データの一部を扱う上で気をつけること
-## 解凍
-***.tar.lz4という形になってるはず。tar.gzとかならよく見るがtar.lz4は見慣れない形式(自分はこの時に初めて見た)。まあでもLinuxやmacOSでならtarコマンドで解凍可能(windowsもかな?)。
-
-``` bash
-$  tar -xf ***.tar.lz4
-```
-
-以下は見慣れない拡張子に惑わされ、一度lz4を解凍してtarにして展開などという遠回りをした最初の自分のやり方。
-まずlz4コマンドで解凍。
-``` bash
-$ lz4 -d [input] [output] 
-```
-
-lz4が入ってないならaptなりbrewなりでインストール。
-macなら
-
-``` bash
-$ brew install lz4
-```
-
-Linuxなら多分
-
-``` bash
-$ sudo apt install liblz4-tool
-```
-
-windowsは知らないが、恐らくlz4解凍できるアプリケーション必要かな。  
-その後で
-
-``` bash
-$  tar -xf ***.tar
-```
-
 
 ## データ形式  
 実際にデータを見てみるとわかるが一行ずつjson形式で書き込まれている。1ファイルあたり100万行で区切られている。  
