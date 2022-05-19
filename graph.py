@@ -2,7 +2,6 @@
 from unicodedata import name
 import pandas as pd
 import numpy as np
-from prometheus_client import Summary
 from igraph import *
 import collections
 import leidenalg as la
