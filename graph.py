@@ -190,15 +190,8 @@ def calc_ration_over_communities(paths, g):
     
 
 if __name__ == "__main__":
-    g = Graph.Read_GML('2020_04_quoted_clusters')
-    summary(g)
-    in_membership = [int(float(i)) for i in g.vs['cluster']]
-    p = la.ModularityVertexPartition(g, weights=g.es['weight'], initial_membership=in_membership)
-    print(p.quality())
-    sum_in = 0
-    sum_all = 0
-    for edge in g.es:
-        sum_all += edge['weight']
-        if g.vs[edge.source]['cluster'] == g.vs[edge.target]['cluster']:
-            sum_in += edge['weight']
-    print(sum_in/sum_all)
+    #g = Graph.Read_GML('2020_04_quoted_clusters')
+    #summary(g)
+    paths = walk_dir('/home/narita/april-ex-rt')
+    g_rt = Graph.Read_GML('2020_04_clusters')
+    calc_ration_over_communities(paths, g_rt)
