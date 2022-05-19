@@ -1,4 +1,5 @@
 from importlib.resources import path
+from unicodedata import name
 import pandas as pd
 import numpy as np
 from igraph import *
@@ -104,16 +105,15 @@ def build_network(paths, save_filename):
     rt_user_list = []
     for path in paths:
         print(path)
-        print(len(rt_user_list))
         with open(path, 'r') as f:
             while True:
-                t = f.readline()
-                if not t:
+                tweet = f.readline().strip()
+                if not tweet:
                     break
-                t = t.strip()
-                t = json.loads(t)
+                tweet = json.loads(tweet)
                 try:
-                    rt_user_list.append(t['user']['id_str'] + ',' + t['retweeted_status']['user']['id_str'])
+                    #rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['retweeted_status']['user']['id_str'])
+                    rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['quoted_status']['user']['id_str'])
                 except:
                     pass
     c = collections.Counter(rt_user_list)
@@ -127,27 +127,13 @@ def build_network(paths, save_filename):
     g.save(save_filename, format='gml')
     return g
 
-def walk_dir(path_origin, since=None, until=None):
+def walk_dir(path_origin):
     paths = []
-    x = []
-    y = []
-    month = '02'
     for pathname, dirnames, filenames in os.walk(path_origin):
         for filename in sorted(filenames, key=str):
-            x.append(filename[:10])
             path = os.path.join(pathname, filename)
-            y.append(count_lines(path))
-            if filename[5:7] != month:
-                print(filename)
-                print('--reset--')
-                build_network(paths, filename[:5] + month)
-                month = filename[5:7]
-                paths = []
-                paths.append(path)
-            else:
-                print(filename)
-                paths.append(path)
-    return [x, y]
+            paths.append(path)
+    return paths
 
 def plot_tweet_count(path_origin):
     day = '01'
@@ -180,23 +166,29 @@ def plot_tweet_count(path_origin):
     plt.xticks(xt, rotation=90)
     plt.show()
 
-
-
+def calc_ration_over_communities(paths, g):
+    twi_count = 0
+    twi_count_target = 0
+    for path in paths:
+        print(path)
+        with open(path, 'r') as f:
+            while True:
+                tweet = f.readline().strip()
+                if not tweet:
+                    break
+                tweet = json.loads(tweet)
+                if tweet['is_quote_status']:
+                    twi_count += 1
+                    try:
+                        source = g.vs.find(name=tweet['user']['id_str'])
+                        target = g.vs.find(name=tweet['quoted_status']['user']['id_str'])
+                        if source['cluster'] == target['cluster']:
+                            twi_count_target += 1
+                    except:
+                        pass
+    return twi_count_target / twi_count
+    
 
 if __name__ == "__main__":
     rt_counts = []
-    for pathname, dirnames, filenames in os.walk('/Users/shougo/Downloads/narita2021'):
-        for filename in sorted(filenames, key=str):
-            rt_count = 0
-            path = os.path.join(pathname, filename)
-            with open(path, 'r') as f:
-                while True:
-                    t = f.readline()
-                    if not t:
-                        break
-                    t = t.strip()
-                    t = json.loads(t)
-                    if 'retweeted_status' in t.keys():
-                        rt_count += 1
-                print(rt_count)
-                rt_counts.append(rt_count)
+    
