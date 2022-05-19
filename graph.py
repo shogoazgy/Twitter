@@ -2,6 +2,7 @@
 from unicodedata import name
 import pandas as pd
 import numpy as np
+from prometheus_client import Summary
 from igraph import *
 import collections
 import leidenalg as la
@@ -193,5 +194,11 @@ if __name__ == "__main__":
     #g = Graph.Read_GML('2020_04_quoted_clusters')
     #summary(g)
     paths = walk_dir('/home/narita/april-ex-rt')
-    g_rt = Graph.Read_GML('2020_04_clusters')
-    calc_ration_over_communities(paths, g_rt)
+    g_rt = Graph.Read_Ncol('2020_04')
+    p = clustering(g_rt)
+    g_rt.vs['cluster'] = p.membership
+    summary(g_rt)
+    p.quality()
+    save_gml(g_rt, '2020_04_rt_clusters')
+    ratio = calc_ration_over_communities(paths, g_rt)
+    print(ratio)
