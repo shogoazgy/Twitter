@@ -193,7 +193,7 @@ if __name__ == "__main__":
     g = Graph.Read_GML('2020_04_quoted_clusters')
     summary(g)
     print(g.vs[0]['cluster'])
-    in_membership = [str(int(i)) for i in g.vs['cluster']]
+    in_membership = [int(float(i)) for i in g.vs['cluster']]
     print(type(in_membership[0]))
     p = la.ModularityVertexPartition(g, weights='weight', initial_membership=in_membership)
     p.quality()
