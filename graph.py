@@ -1,4 +1,4 @@
-from importlib.resources import path
+#from importlib.resources import path
 from unicodedata import name
 import pandas as pd
 import numpy as np
@@ -14,7 +14,7 @@ import json
 import sys
 import subprocess
 import pickle
-from sklearn.linear_model import LinearRegression
+#from sklearn.linear_model import LinearRegression
 
 def count_lines(path):
     cmd = "wc -l " + path
