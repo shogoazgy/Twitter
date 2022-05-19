@@ -191,6 +191,5 @@ def calc_ration_over_communities(paths, g):
 
 if __name__ == "__main__":
     g = Graph.Read_GML('2020_04_quoted_cluster')
-    p = la.ModularityVertexPartition(g,weights='weight', initial_membership=g.vs['cluster'])
+    p = la.ModularityVertexPartition(g,weights='weight', initial_membership=[str(float(i)) for i in g.vs['cluster']])
     p.quality()
-    
