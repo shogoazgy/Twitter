@@ -193,10 +193,11 @@ if __name__ == "__main__":
     #g = Graph.Read_GML('2020_04_quoted_clusters')
     #summary(g)
     paths = walk_dir('/home/narita/april-ex-rt')
-    g_rt = Graph.Read_GML('2020-04')
-    p = clustering(g_rt)
-    g_rt.vs['cluster'] = p.membership
+    g_rt = Graph.Read_GML('2020_04_quoted_clusters')
+    with open('2020_04_membership', 'r') as f:
+        g_rt.vs['cluster'] = [float(s.strip()) for s in f.readlines()]
     summary(g_rt)
+    p = la.ModularityVertexPartition(g_rt,weights=g_rt.vs['weight'], initial_membership=g_rt.vs['cluster'])
     p.quality()
     save_gml(g_rt, '2020_04_rt_clusters')
     ratio = calc_ration_over_communities(paths, g_rt)
