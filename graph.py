@@ -193,7 +193,7 @@ if __name__ == "__main__":
     #g = Graph.Read_GML('2020_04_quoted_clusters')
     #summary(g)
     paths = walk_dir('/home/narita/april-ex-rt')
-    g_rt = Graph.Read_Ncol('2020-04')
+    g_rt = Graph.Read_GML('2020-04')
     p = clustering(g_rt)
     g_rt.vs['cluster'] = p.membership
     summary(g_rt)
