@@ -196,4 +196,4 @@ if __name__ == "__main__":
     in_membership = [int(float(i)) for i in g.vs['cluster']]
     print(type(in_membership[0]))
     p = la.ModularityVertexPartition(g, weights='weight', initial_membership=in_membership)
-    p.quality()
+    print(p.quality())
