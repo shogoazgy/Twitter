@@ -197,7 +197,7 @@ if __name__ == "__main__":
     sum_all = 0
     for edge in g.es:
         sum_all += edge['weight']
-        if edge.target == edge.source:
+        if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
             sum_in += edge['weight']
     print(sum_in / sum_all)
     p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
