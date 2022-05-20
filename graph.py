@@ -1,4 +1,5 @@
 #from importlib.resources import path
+from statistics import mode
 from unicodedata import name
 import pandas as pd
 import numpy as np
@@ -192,6 +193,7 @@ def calc_ration_over_communities(paths, g):
 if __name__ == "__main__":
     g = Graph.Read_GML('2020_04_quoted_clusters')
     summary(g)
+    print(sum(g.strength(g.vs, weights=g.es['weight'])))
     """
     paths = walk_dir('/home/narita/april-ex-rt')
     g_rt = Graph.Read_Ncol('2020_04_clusters')
