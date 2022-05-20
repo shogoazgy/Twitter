@@ -197,9 +197,12 @@ if __name__ == "__main__":
     g = build_network(paths, '2020_07_quoted')
     summary(g)
     print(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
+    print()
     p = clustering(g)
     #p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=g.vs['cluster'])
     print(p.quality())
+    g.vs['cluster'] = p.membership
+    save_gml(g, '2020_07_quoted_clusters')
     g_rt = Graph.Read_GML('2020_07_clusters')
     summary(g_rt)
     p= la.ModularityVertexPartition(g_rt,weights=g_rt.es['weight'], initial_membership=g_rt.vs['cluster'])
