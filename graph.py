@@ -192,17 +192,14 @@ def calc_ration_over_communities(paths, g):
 
 if __name__ == "__main__":
     #g = Graph.Read_GML('2020_04_quoted_clusters')
-    g = Graph.Read_GML('2020_04_rt_clusters')
+    #g = Graph.Read_GML('2020_04_rt_clusters')
+    paths = walk_dir('/home/narita/Twitter/2020-07-ex-rt')
+    g = build_network(paths, '2020_07_quoted')
     summary(g)
     print(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
-    """
-    paths = walk_dir('/home/narita/april-ex-rt')
-    with open('2020_04_membership', 'r') as f:
-        g_rt.vs['cluster'] = [int(float(s.strip())) for s in f.readlines()]
-    summary(g_rt)
-    p = la.ModularityVertexPartition(g_rt,weights=g_rt.es['weight'], initial_membership=g_rt.vs['cluster'])
+    p = clustering(g)
+    #p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=g.vs['cluster'])
     print(p.quality())
-    save_gml(g_rt, '2020_04_rt_clusters')
+    g_rt = Graph.Read_GML('2020_07_clusters')
     ratio = calc_ration_over_communities(paths, g_rt)
     print(ratio)
-    """
