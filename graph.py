@@ -193,7 +193,7 @@ def calc_ration_over_communities(paths, g):
 if __name__ == "__main__":
     g = Graph.Read_GML('2020_04_quoted_clusters')
     summary(g)
-    print(sum(g.strength(g.vs, weights=g.es['weight'])))
+    print(sum(g.strength(g.vs, weights=g.es['weight'], mode='in')))
     """
     paths = walk_dir('/home/narita/april-ex-rt')
     g_rt = Graph.Read_Ncol('2020_04_clusters')
