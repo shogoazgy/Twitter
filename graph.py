@@ -192,7 +192,16 @@ def calc_ration_over_communities(paths, g):
 
 if __name__ == "__main__":
     #g = Graph.Read_GML('2020_04_quoted_clusters')
-    #g = Graph.Read_GML('2020_04_rt_clusters')
+    g = Graph.Read_GML('2020_04_rt_clusters')
+    sum_in = 0
+    sum_all = 0
+    for edge in g.es:
+        sum_all += edge['weight']
+        if edge.target == edge.source:
+            sum_in += edge['weight']
+    print(sum_in / sum_all)
+    p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=int(i) for i in g.vs['cluster']])
+    print(p.quality())
     """
     paths = walk_dir('/home/narita/Twitter/2020-07-ex-rt')
     g = build_network(paths, '2020_07_quoted')
@@ -204,10 +213,9 @@ if __name__ == "__main__":
     g.vs['cluster'] = p.membership
     save_gml(g, '2020_07_quoted_clusters')
     """
-    g_rt = Graph.Read_GML('2020_07_clusters')
-    summary(g_rt)
-    p= la.ModularityVertexPartition(g_rt,weights=g_rt.es['weight'], initial_membership=[int(i) for i in g_rt.vs['cluster']])
-    print(sum(g_rt.strength(g_rt.vs, weights=g_rt.es['weight'], mode='out')))
-    print(p.quality())
+    #summary(g_rt)
+    #p= la.ModularityVertexPartition(g_rt,weights=g_rt.es['weight'], initial_membership=[int(i) for i in g_rt.vs['cluster']])
+    #print(sum(g_rt.strength(g_rt.vs, weights=g_rt.es['weight'], mode='out')))
+    #print(p.quality())
     #ratio = calc_ration_over_communities(paths, g_rt)
     #print(ratio)
