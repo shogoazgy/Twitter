@@ -200,7 +200,7 @@ if __name__ == "__main__":
         if edge.target == edge.source:
             sum_in += edge['weight']
     print(sum_in / sum_all)
-    p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=int(i) for i in g.vs['cluster']])
+    p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
     print(p.quality())
     """
     paths = walk_dir('/home/narita/Twitter/2020-07-ex-rt')
@@ -208,7 +208,7 @@ if __name__ == "__main__":
     summary(g)
     print(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
     p = clustering(g)
-    #p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=int(i) for i in g.vs['cluster']])
+    #p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
     print(p.quality())
     g.vs['cluster'] = p.membership
     save_gml(g, '2020_07_quoted_clusters')
