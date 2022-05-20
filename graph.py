@@ -191,8 +191,8 @@ def calc_ration_over_communities(paths, g):
     
 
 if __name__ == "__main__":
-    g = Graph.Read_GML('2020_07_quoted_clusters')
-    #g = Graph.Read_GML('2020_04_rt_clusters')
+    #g = Graph.Read_GML('2020_07_quoted_clusters')
+    g = Graph.Read_GML('2020_07_clusters')
     sum_in = 0
     sum_all = 0
     for edge in g.es:
@@ -201,6 +201,7 @@ if __name__ == "__main__":
             sum_in += edge['weight']
     print(sum_in / sum_all)
     p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
+    print(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
     print(p.quality())
     """
     paths = walk_dir('/home/narita/Twitter/2020-07-ex-rt')
