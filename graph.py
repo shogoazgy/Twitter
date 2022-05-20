@@ -201,5 +201,8 @@ if __name__ == "__main__":
     #p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=g.vs['cluster'])
     print(p.quality())
     g_rt = Graph.Read_GML('2020_07_clusters')
+    summary(g_rt)
+    p= la.ModularityVertexPartition(g_rt,weights=g_rt.es['weight'], initial_membership=g_rt.vs['cluster'])
+    print(p.quality())
     ratio = calc_ration_over_communities(paths, g_rt)
     print(ratio)
