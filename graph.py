@@ -191,8 +191,8 @@ def calc_ration_over_communities(paths, g):
     
 
 if __name__ == "__main__":
-    #g = Graph.Read_GML('2020_04_quoted_clusters')
-    g = Graph.Read_GML('2020_04_rt_clusters')
+    g = Graph.Read_GML('2020_07_quoted_clusters')
+    #g = Graph.Read_GML('2020_04_rt_clusters')
     sum_in = 0
     sum_all = 0
     for edge in g.es:
