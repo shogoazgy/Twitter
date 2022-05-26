@@ -245,10 +245,10 @@ if __name__ == "__main__":
                         sum_in += edge['weight']
                 quoted_result['community edge ratio'].append(sum_in / sum_all)
 
-                g = build_network(paths, save_filename='/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted', mode='reply')
+                g = build_network(paths, save_filename='/home/narita/Twitter/graphs/reply/2020_' + pre_month + '_reply', mode='reply')
                 p = clustering(g)
                 g.vs['cluster'] = p.membership
-                save_gml(g, '/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted_clusters')
+                save_gml(g, '/home/narita/Twitter/graphs/reply/2020_' + pre_month + '_reply_clusters')
                 reply_result['term'].append('2020_' + pre_month)
                 reply_result['node'].append(len(g.vs))
                 reply_result['edge'].append(len(g.es))
@@ -266,7 +266,15 @@ if __name__ == "__main__":
                 print(pre_month)
                 paths = []
         paths.append(path)
+    df_quoted = pd.DataFrame(quoted_result)
+    df_quoted = df_quoted.set_index('term')
+    df_quoted.to_csv("quoted.csv", encoding="shift_jis")
+    df_reply = pd.DataFrame(reply_result)
+    df_reply = df_reply.set_index('term')
+    df_reply.to_csv("reply.csv", encoding="shift_jis")
+
     #p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
+
     """
     paths = walk_dir('/home/narita/Twitter/2020-07-ex-rt')
     g = build_network(paths, '2020_07_quoted')
