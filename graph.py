@@ -116,6 +116,7 @@ def build_network(paths, save_filename, mode='quoted'):
                 tweet = json.loads(tweet)
                 if mode == 'quoted':
                     if tweet['is_quote_status'] == True:
+                        print(tweet['is_quote_status'])
                         rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['quoted_status']['user']['id_str'])
                 elif mode == 'retweet':
                     rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['retweeted_status']['user']['id_str'])
