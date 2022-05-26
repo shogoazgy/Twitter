@@ -263,10 +263,9 @@ if __name__ == "__main__":
                     if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
                         sum_in += edge['weight']
                 reply_result['community edge ratio'].append(sum_in / sum_all)
-
-                pre_month = path[-12:-11]
                 print(pre_month)
                 paths = []
+        pre_month = path[-12:-11]
         paths.append(path)
     df_quoted = pd.DataFrame(quoted_result)
     df_quoted = df_quoted.set_index('term')
