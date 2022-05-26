@@ -1,6 +1,8 @@
 #from importlib.resources import path
 from statistics import mode
+from tkinter.messagebox import NO
 from unicodedata import name
+from unittest import result
 import pandas as pd
 import numpy as np
 from igraph import *
@@ -102,7 +104,7 @@ def sort_max_print(subg, centrality, guest_token, len=10):
         ind = centrality.index(cen_sorted[i])
         print(id_to_screen_name(subg.vs[ind]['name'], guest_token=guest_token))
 
-def build_network(paths, save_filename):
+def build_network(paths, save_filename, mode='quoted'):
     rt_user_list = []
     for path in paths:
         print(path)
@@ -112,11 +114,14 @@ def build_network(paths, save_filename):
                 if not tweet:
                     break
                 tweet = json.loads(tweet)
-                try:
-                    #rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['retweeted_status']['user']['id_str'])
-                    rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['quoted_status']['user']['id_str'])
-                except:
-                    pass
+                if mode == 'quoted':
+                    if tweet['is_quote_status'] == True:
+                        rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['quoted_status']['user']['id_str'])
+                elif mode == 'retweet':
+                    rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['retweeted_status']['user']['id_str'])
+                elif mode == 'reply':
+                    if tweet['in_reply_to_user_id_str'] is not None:
+                        rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['in_reply_to_user_id_str'])
     c = collections.Counter(rt_user_list)
     del rt_user_list
     to_from_freq_list = []
@@ -192,17 +197,76 @@ def calc_ration_over_communities(paths, g):
 
 if __name__ == "__main__":
     #g = Graph.Read_GML('2020_07_quoted_clusters')
-    g = Graph.Read_GML('2020_07_clusters')
-    sum_in = 0
-    sum_all = 0
-    for edge in g.es:
-        sum_all += edge['weight']
-        if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
-            sum_in += edge['weight']
-    print(sum_in / sum_all)
-    p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
-    print(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
-    print(p.quality())
+    all_paths = walk_dir('/home/narita/2020-ex-rt')
+    paths = []
+    pre_month = ''
+    rt_result = {}
+    rt_result['term'] = []
+    rt_result['node'] = []
+    rt_result['edge'] = []
+    rt_result['RT'] = []
+    rt_result['modurality'] = []
+    rt_result['community edge ratio'] = []
+    quoted_result = {}
+    quoted_result['term'] = []
+    quoted_result['node'] = []
+    quoted_result['edge'] = []
+    quoted_result['RT'] = []
+    quoted_result['modurality'] = []
+    quoted_result['community edge ratio'] = []
+    quoted_result['community edge ratio (RT network)'] = []
+    reply_result = {}
+    reply_result['term'] = []
+    reply_result['node'] = []
+    reply_result['edge'] = []
+    reply_result['RT'] = []
+    reply_result['modurality'] = []
+    reply_result['community edge ratio'] = []
+    reply_result['community edge ratio (RT network)'] = []
+
+    for path in all_paths:
+        if path[-12:-11] != pre_month:
+            if paths != []:
+                print(paths)
+                g = build_network(paths, save_filename='/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted', mode='quoted')
+                p = clustering(g)
+                g.vs['cluster'] = p.membership
+                save_gml(g, '/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted_clusters')
+                quoted_result['term'].append('2020_' + pre_month)
+                quoted_result['node'].append(len(g.vs))
+                quoted_result['edge'].append(len(g.es))
+                quoted_result['RT'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
+                quoted_result['modurality'].append(p.quality())
+                sum_in = 0
+                sum_all = 0
+                for edge in g.es:
+                    sum_all += edge['weight']
+                    if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
+                        sum_in += edge['weight']
+                quoted_result['community edge ratio'].append(sum_in / sum_all)
+
+                g = build_network(paths, save_filename='/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted', mode='reply')
+                p = clustering(g)
+                g.vs['cluster'] = p.membership
+                save_gml(g, '/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted_clusters')
+                reply_result['term'].append('2020_' + pre_month)
+                reply_result['node'].append(len(g.vs))
+                reply_result['edge'].append(len(g.es))
+                reply_result['RT'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
+                reply_result['modurality'].append(p.quality())
+                sum_in = 0
+                sum_all = 0
+                for edge in g.es:
+                    sum_all += edge['weight']
+                    if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
+                        sum_in += edge['weight']
+                reply_result['community edge ratio'].append(sum_in / sum_all)
+
+                pre_month = path[-12:-11]
+                print(pre_month)
+                paths = []
+        paths.append(path)
+    #p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
     """
     paths = walk_dir('/home/narita/Twitter/2020-07-ex-rt')
     g = build_network(paths, '2020_07_quoted')
