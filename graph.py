@@ -106,6 +106,7 @@ def sort_max_print(subg, centrality, guest_token, len=10):
 
 def build_network(paths, save_filename, mode='quoted'):
     rt_user_list = []
+    c = 0
     for path in paths:
         print(path)
         with open(path, 'r') as f:
@@ -119,12 +120,13 @@ def build_network(paths, save_filename, mode='quoted'):
                         try:
                             rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['quoted_status']['user']['id_str'])
                         except:
-                            print(tweet)
+                            c += 1
                 elif mode == 'retweet':
                     rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['retweeted_status']['user']['id_str'])
                 elif mode == 'reply':
                     if tweet['in_reply_to_user_id_str'] is not None:
                         rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['in_reply_to_user_id_str'])
+    print('無効なツイート: ' + str(c))
     c = collections.Counter(rt_user_list)
     del rt_user_list
     to_from_freq_list = []
