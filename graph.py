@@ -199,7 +199,7 @@ if __name__ == "__main__":
     #g = Graph.Read_GML('2020_07_quoted_clusters')
     all_paths = walk_dir('/home/narita/2020-ex-rt')
     paths = []
-    pre_month = '02'
+    pre_month = ''
     rt_result = {}
     rt_result['term'] = []
     rt_result['node'] = []
@@ -265,8 +265,6 @@ if __name__ == "__main__":
                 pre_month = path[-12:-11]
                 print(pre_month)
                 paths = []
-        print(pre_month)
-        print(path[-13:-11])
         paths.append(path)
     df_quoted = pd.DataFrame(quoted_result)
     df_quoted = df_quoted.set_index('term')
