@@ -265,7 +265,8 @@ if __name__ == "__main__":
                 pre_month = path[-12:-11]
                 print(pre_month)
                 paths = []
-        pre_month = path[-12:-11]
+        print(pre_month)
+        print(path[-12:-11])
         paths.append(path)
     df_quoted = pd.DataFrame(quoted_result)
     df_quoted = df_quoted.set_index('term')
