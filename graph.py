@@ -116,7 +116,7 @@ def build_network(paths, save_filename, mode='quoted'):
                 tweet = json.loads(tweet)
                 if mode == 'quoted':
                     if tweet['is_quote_status'] == True:
-                        print(tweet['is_quote_status'])
+                        print(tweet)
                         rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['quoted_status']['user']['id_str'])
                 elif mode == 'retweet':
                     rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['retweeted_status']['user']['id_str'])
@@ -227,6 +227,7 @@ if __name__ == "__main__":
 
     for path in all_paths:
         if path[-12:-11] != pre_month:
+            print(pre_month)
             if paths != []:
                 print(paths)
                 g = build_network(paths, save_filename='/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted', mode='quoted')
