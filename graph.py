@@ -234,11 +234,13 @@ if __name__ == "__main__":
         print(pre_month)
         if path[-12:-10] != pre_month:
             if paths != []:
-                print(paths)
                 g = build_network(paths, save_filename='/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted', mode='quoted')
+                print('quoted clustering')
                 p = clustering(g)
+                print('quoted clustering end')
                 g.vs['cluster'] = p.membership
                 save_gml(g, '/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted_clusters')
+                summary(g)
                 quoted_result['term'].append('2020_' + pre_month)
                 quoted_result['node'].append(len(g.vs))
                 quoted_result['edge'].append(len(g.es))
@@ -253,7 +255,10 @@ if __name__ == "__main__":
                 quoted_result['community edge ratio'].append(sum_in / sum_all)
 
                 g = build_network(paths, save_filename='/home/narita/Twitter/graphs/reply/2020_' + pre_month + '_reply', mode='reply')
+                summary(g)
+                print('reply clustering')
                 p = clustering(g)
+                print('reply clustering end')
                 g.vs['cluster'] = p.membership
                 save_gml(g, '/home/narita/Twitter/graphs/reply/2020_' + pre_month + '_reply_clusters')
                 reply_result['term'].append('2020_' + pre_month)
