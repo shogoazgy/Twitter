@@ -230,8 +230,6 @@ if __name__ == "__main__":
     reply_result['community edge ratio (RT network)'] = []
 
     for path in all_paths:
-        print(path)
-        print(pre_month)
         if path[-12:-10] != pre_month:
             if paths != []:
                 g = build_network(paths, save_filename='/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted', mode='quoted')
