@@ -225,6 +225,8 @@ if __name__ == "__main__":
     reply_result['community edge ratio (RT network)'] = []
 
     for path in all_paths:
+        print(path)
+        print(pre_month)
         if path[-12:-11] != pre_month:
             if paths != []:
                 print(paths)
