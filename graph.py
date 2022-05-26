@@ -265,7 +265,7 @@ if __name__ == "__main__":
                 reply_result['community edge ratio'].append(sum_in / sum_all)
                 print(pre_month)
                 paths = []
-        pre_month = path[-12:-11]
+        pre_month = path[-12:-10]
         paths.append(path)
     df_quoted = pd.DataFrame(quoted_result)
     df_quoted = df_quoted.set_index('term')
