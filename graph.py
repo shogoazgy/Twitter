@@ -202,7 +202,15 @@ def calc_ration_over_communities(paths, g):
 
 if __name__ == "__main__":
     #g = Graph.Read_GML('2020_07_quoted_clusters')
-    all_paths = walk_dir('/home/narita/2020-ex-rt')
+    #all_paths = walk_dir('/home/narita/2020-ex-rt')
+    g = Graph.Read_Ncol('/home/narita/Twitter/graphs/RT/2020_04_clusters')
+    with open('/home/narita/Twitter/graphs/RT/2020_04_membership') as f:
+        g.vs['cluster'] = [float(s.strip()) for s in f.readlines()]
+    save_gml(g, '/home/narita/Twitter/graphs/RT/2020_04_clusters')
+    g = Graph.Read_Ncol('/home/narita/Twitter/graphs/RT/2020_03_clusters')
+    with open('/home/narita/Twitter/graphs/RT/2020_03_membership') as f:
+        g.vs['cluster'] = [float(s.strip()) for s in f.readlines()]
+    save_gml(g, '/home/narita/Twitter/graphs/RT/2020_03_clusters')
     paths = []
     pre_month = ''
     rt_result = {}
@@ -250,7 +258,6 @@ if __name__ == "__main__":
     df_quoted = pd.DataFrame(quoted_result)
     df_quoted = df_quoted.set_index('term')
     df_quoted.to_csv("quoted.csv", encoding="shift_jis")
-    """
     paths = walk_dir('/home/narita/Twitter/graphs/reply')
     for path in paths:
         if path[-1] == 's':
@@ -272,7 +279,6 @@ if __name__ == "__main__":
     df_reply = pd.DataFrame(reply_result)
     df_reply = df_reply.set_index('term')
     df_reply.to_csv("reply.csv", encoding="shift_jis")
-    """
     for path in all_paths:
         if path[-12:-10] != pre_month:
             if paths != []:
