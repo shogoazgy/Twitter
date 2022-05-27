@@ -228,7 +228,30 @@ if __name__ == "__main__":
     reply_result['modurality'] = []
     reply_result['community edge ratio'] = []
     reply_result['community edge ratio (RT network)'] = []
-
+    paths = walk_dir('/home/narita/Twitter/graphs/quoted')
+    for path in paths:
+        if path[-1] == 's':
+            g = Graph.ReadGML(path)
+            summary(g)
+            quoted_result['term'].append('2020_' + pre_month)
+            quoted_result['node'].append(len(g.vs))
+            quoted_result['edge'].append(len(g.es))
+            quoted_result['RT'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
+            quoted_result['modurality'].append(p.quality())
+            sum_in = 0
+            sum_all = 0
+            for edge in g.es:
+                sum_all += edge['weight']
+                if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
+                    sum_in += edge['weight']
+            quoted_result['community edge ratio'].append(sum_in / sum_all)
+    print(len(quoted_result['term']))
+    print(len(quoted_result['node']))
+    print(len(quoted_result['edge']))
+    print(len(quoted_result['RT']))
+    print(len(quoted_result['modurality']))
+    print(len(quoted_result['community edge ratio']))
+    """
     for path in all_paths:
         if path[-12:-10] != pre_month:
             if paths != []:
@@ -283,7 +306,7 @@ if __name__ == "__main__":
     df_reply.to_csv("reply.csv", encoding="shift_jis")
 
     #p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
-
+    """
     """
     paths = walk_dir('/home/narita/Twitter/2020-07-ex-rt')
     g = build_network(paths, '2020_07_quoted')
