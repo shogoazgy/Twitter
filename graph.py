@@ -231,7 +231,7 @@ if __name__ == "__main__":
     paths = walk_dir('/home/narita/Twitter/graphs/quoted')
     for path in paths:
         if path[-1] == 's':
-            g = Graph.ReadGML(path)
+            g = Graph.Read_GML(path)
             summary(g)
             quoted_result['term'].append('2020_' + pre_month)
             quoted_result['node'].append(len(g.vs))
