@@ -232,8 +232,9 @@ if __name__ == "__main__":
     for path in paths:
         if path[-1] == 's':
             g = Graph.Read_GML(path)
+            p = la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
             summary(g)
-            quoted_result['term'].append('2020_' + pre_month)
+            quoted_result['term'].append('2020_' + path[-12:-10])
             quoted_result['node'].append(len(g.vs))
             quoted_result['edge'].append(len(g.es))
             quoted_result['RT'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
