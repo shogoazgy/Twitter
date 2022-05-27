@@ -228,6 +228,7 @@ if __name__ == "__main__":
     reply_result['modurality'] = []
     reply_result['community edge ratio'] = []
     #reply_result['community edge ratio (RT network)'] = []
+    """
     paths = walk_dir('/home/narita/Twitter/graphs/quoted')
     for path in paths:
         if path[-1] == 's':
@@ -249,6 +250,7 @@ if __name__ == "__main__":
     df_quoted = pd.DataFrame(quoted_result)
     df_quoted = df_quoted.set_index('term')
     df_quoted.to_csv("quoted.csv", encoding="shift_jis")
+    """
     paths = walk_dir('/home/narita/Twitter/graphs/reply')
     for path in paths:
         if path[-1] == 's':
@@ -266,7 +268,7 @@ if __name__ == "__main__":
                 sum_all += edge['weight']
                 if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
                     sum_in += edge['weight']
-            quoted_result['community edge ratio'].append(sum_in / sum_all)
+            reply_result['community edge ratio'].append(sum_in / sum_all)
     df_reply = pd.DataFrame(reply_result)
     df_reply = df_reply.set_index('term')
     df_reply.to_csv("reply.csv", encoding="shift_jis")
