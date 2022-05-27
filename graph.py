@@ -326,7 +326,6 @@ if __name__ == "__main__":
     """
     #p= la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
     """
-    """
     paths = walk_dir('/home/narita/Twitter/2020-07-ex-rt')
     g = build_network(paths, '2020_07_quoted')
     summary(g)
