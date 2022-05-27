@@ -252,6 +252,9 @@ if __name__ == "__main__":
     print(len(quoted_result['RT']))
     print(len(quoted_result['modurality']))
     print(len(quoted_result['community edge ratio']))
+    df_quoted = pd.DataFrame(quoted_result)
+    df_quoted = df_quoted.set_index('term')
+    df_quoted.to_csv("quoted.csv", encoding="shift_jis")
     """
     for path in all_paths:
         if path[-12:-10] != pre_month:
