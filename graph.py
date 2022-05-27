@@ -203,14 +203,6 @@ def calc_ration_over_communities(paths, g):
 if __name__ == "__main__":
     #g = Graph.Read_GML('2020_07_quoted_clusters')
     #all_paths = walk_dir('/home/narita/2020-ex-rt')
-    g = Graph.Read_Ncol('/home/narita/Twitter/graphs/RT/2020_04_clusters')
-    with open('/home/narita/Twitter/graphs/RT/2020_04_membership') as f:
-        g.vs['cluster'] = [float(s.strip()) for s in f.readlines()]
-    save_gml(g, '/home/narita/Twitter/graphs/RT/2020_04_clusters')
-    g = Graph.Read_Ncol('/home/narita/Twitter/graphs/RT/2020_03_clusters')
-    with open('/home/narita/Twitter/graphs/RT/2020_03_membership') as f:
-        g.vs['cluster'] = [float(s.strip()) for s in f.readlines()]
-    save_gml(g, '/home/narita/Twitter/graphs/RT/2020_03_clusters')
     paths = []
     pre_month = ''
     rt_result = {}
@@ -236,29 +228,29 @@ if __name__ == "__main__":
     reply_result['modurality'] = []
     reply_result['community edge ratio'] = []
     #reply_result['community edge ratio (RT network)'] = []
-    """
-    paths = walk_dir('/home/narita/Twitter/graphs/quoted')
+    paths = walk_dir('/home/narita/Twitter/graphs/RT')
     for path in paths:
         if path[-1] == 's':
             g = Graph.Read_GML(path)
             p = la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
             summary(g)
-            quoted_result['term'].append('2020_' + path[-12:-10])
-            quoted_result['node'].append(len(g.vs))
-            quoted_result['edge'].append(len(g.es))
-            quoted_result['RT'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
-            quoted_result['modurality'].append(p.quality())
+            rt_result['term'].append('2020_' + path[-12:-10])
+            rt_result['node'].append(len(g.vs))
+            rt_result['edge'].append(len(g.es))
+            rt_result['RT'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
+            rt_result['modurality'].append(p.quality())
             sum_in = 0
             sum_all = 0
             for edge in g.es:
                 sum_all += edge['weight']
                 if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
                     sum_in += edge['weight']
-            quoted_result['community edge ratio'].append(sum_in / sum_all)
-    df_quoted = pd.DataFrame(quoted_result)
-    df_quoted = df_quoted.set_index('term')
-    df_quoted.to_csv("quoted.csv", encoding="shift_jis")
-    paths = walk_dir('/home/narita/Twitter/graphs/reply')
+            rt_result['community edge ratio'].append(sum_in / sum_all)
+    df_rt = pd.DataFrame(rt_result)
+    df_rt = df_rt.set_index('term')
+    df_rt.to_csv("rt.csv", encoding="shift_jis")
+    #paths = walk_dir('/home/narita/Twitter/graphs/reply')
+    """
     for path in paths:
         if path[-1] == 's':
             g = Graph.Read_GML(path)
