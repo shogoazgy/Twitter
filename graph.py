@@ -253,7 +253,7 @@ if __name__ == "__main__":
                 quoted_result['term'].append('2020_' + pre_month)
                 quoted_result['node'].append(len(g.vs))
                 quoted_result['edge'].append(len(g.es))
-                quoted_result['RT'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
+                quoted_result['sum edge'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
                 quoted_result['modurality'].append(p.quality())
                 sum_in = 0
                 sum_all = 0
@@ -272,7 +272,7 @@ if __name__ == "__main__":
                 reply_result['term'].append('2020_' + pre_month)
                 reply_result['node'].append(len(g.vs))
                 reply_result['edge'].append(len(g.es))
-                reply_result['RT'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
+                reply_result['sum edge'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
                 reply_result['modurality'].append(p.quality())
                 sum_in = 0
                 sum_all = 0
