@@ -202,7 +202,8 @@ def calc_ration_over_communities(paths, g):
     
 
 if __name__ == "__main__":
-    g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
+    #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
+    g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
     print(len(set(g.vs['cluster'])))
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
