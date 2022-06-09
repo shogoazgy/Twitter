@@ -203,8 +203,25 @@ def calc_ration_over_communities(paths, g):
 
 if __name__ == "__main__":
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
-    g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
-    print(len(set(g.vs['cluster'])))
+    #g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
+    all_rt_path = walk_dir('/home/narita/Twitter/graphs/RT/')
+    all_paths = walk_dir('/home/narita/2020-ex-rt-jp/')
+    pre_month = ''
+    paths = []
+    i = 0
+    for path in all_paths:
+        print(path)
+        if path[-12:-10] != pre_month:
+            if paths != []:
+                print(paths)
+                g = Graph.Read_GML(all_rt_path[i])
+                rate = calc_ration_over_communities(paths, g)
+                print(rate)
+                paths = []
+        pre_month = path[-12:-10]
+        paths.append(path)
+
+                
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
     paths = []
