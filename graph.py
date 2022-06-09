@@ -216,11 +216,15 @@ if __name__ == "__main__":
     if len(all_rt_path) != len(all_quoted_path):
         print('あああ')
         sys.exit()
+    print(len(all_quoted_path))
+    print(len(all_rt_path))
+    print(len(all_reply_path))
     for i in range(len(all_quoted_path)):
         g_rt = Graph.Read_GML(all_rt_path[i])
         g_quoted = Graph.Read_GML(all_quoted_path[i])
         g_reply = Graph.Read_GML(all_reply_path[i])
         print(str(m) + '月')
+        m += 1
         rt_set = set(g_rt.vs['name'])
         reply_set = set(g_reply.vs['name'])
         quoted_set = set(g_quoted.vs['name'])
