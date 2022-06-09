@@ -212,7 +212,7 @@ if __name__ == "__main__":
     all_rt_path = walk_dir('/home/narita/Twitter/graphs/RT/')
     all_quoted_path = walk_dir('/home/narita/Twitter/graphs/quoted/')
     all_reply_path = walk_dir('/home/narita/Twitter/graphs/reply/')
-    i = 2
+    m = 2
     if len(all_rt_path) != len(all_quoted_path):
         print('あああ')
         sys.exit()
@@ -220,10 +220,13 @@ if __name__ == "__main__":
         g_rt = Graph.Read_GML(all_rt_path[i])
         g_quoted = Graph.Read_GML(all_quoted_path[i])
         g_reply = Graph.Read_GML(all_reply_path[i])
-        print(str(i) + '月')
-        print('RT & quote : ' + str(len(set(g_rt.vs['name']) & set(g_quoted.vs['name'])) / min(len(set(g_rt.vs['name']), len(set(g_quoted.vs['name']))))))
-        print('quote & reply : ' + str(len(set(g_reply.vs['name']) & set(g_quoted.vs['name'])) / min(len(set(g_reply.vs['name']), len(set(g_quoted.vs['name']))))))
-        print('RT & reply : ' + str(len(set(g_reply.vs['name']) & set(g_rt.vs['name'])) / min(len(set(g_reply.vs['name']), len(set(g_rt.vs['name']))))))
+        print(str(m) + '月')
+        rt_set = set(g_rt.vs['name'])
+        reply_set = set(g_reply.vs['name'])
+        quoted_set = set(g_quoted.vs['name'])
+        print('RT & quote : ' + str(len(rt_set & quoted_set) / min(len(rt_set), len(quoted_set))))
+        print('quote & reply : ' + str(len(reply_set & quoted_set) / min(len(reply_set), len(quoted_set))))
+        print('RT & reply : ' + str(len(reply_set & rt_set) / min(len(reply_set), len(rt_set))))
         print('\n')
     
                 
