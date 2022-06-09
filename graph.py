@@ -213,9 +213,6 @@ if __name__ == "__main__":
     all_quoted_path = walk_dir('/home/narita/Twitter/graphs/quoted/')
     all_reply_path = walk_dir('/home/narita/Twitter/graphs/reply/')
     m = 2
-    if len(all_rt_path) != len(all_quoted_path):
-        print('あああ')
-        sys.exit()
     print(len(all_quoted_path))
     print(len(all_rt_path))
     print(len(all_reply_path))
