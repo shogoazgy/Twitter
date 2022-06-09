@@ -210,22 +210,21 @@ if __name__ == "__main__":
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
     all_rt_path = walk_dir('/home/narita/Twitter/graphs/RT/')
-    all_paths = walk_dir('/home/narita/2020-ex-rt-jp/')
-    pre_month = ''
-    paths = []
-    i = 0
-    for path in all_paths:
-        #print(path)
-        if path[-12:-10] != pre_month:
-            if paths != []:
-                #print(paths)
-                g = Graph.Read_GML(all_rt_path[i])
-                rate = calc_ration_over_communities(paths, g)
-                print(rate)
-                paths = []
-        pre_month = path[-12:-10]
-        paths.append(path)
-
+    all_quoted_path = walk_dir('/home/narita/Twitter/graphs/quoted/')
+    all_reply_path = walk_dir('/home/narita/Twitter/graphs/reply/')
+    i = 2
+    if len(all_rt_path) != len(all_quoted_path):
+        print('あああ')
+        sys.exit()
+    for i in range(len(all_quoted_path)):
+        g_rt = Graph.Read_GML(all_rt_path[i])
+        g_quoted = Graph.Read_GML(all_quoted_path[i])
+        g_reply = Graph.Read_GML(all_reply_path[i])
+        print(str(i) + '月')
+        print('RT & quote : ' + str(len(set(g_rt.vs['name']) & set(g_quoted.vs['name'])) / min(len(set(g_rt.vs['name']), len(set(g_quoted.vs['name']))))))
+        print('quote & reply : ' + str(len(set(g_reply.vs['name']) & set(g_quoted.vs['name'])) / min(len(set(g_reply.vs['name']), len(set(g_quoted.vs['name']))))))
+        print('RT & reply : ' + str(len(set(g_reply.vs['name']) & set(g_rt.vs['name'])) / min(len(set(g_reply.vs['name']), len(set(g_rt.vs['name']))))))
+    
                 
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
