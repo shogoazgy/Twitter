@@ -182,18 +182,20 @@ def calc_ration_over_communities(paths, g):
     twi_count = 0
     twi_count_target = 0
     for path in paths:
-        print(path)
+        #print(path)
         with open(path, 'r') as f:
             while True:
                 tweet = f.readline().strip()
                 if not tweet:
                     break
                 tweet = json.loads(tweet)
-                if tweet['is_quote_status']:
+                #if tweet['is_quote_status']:
+                if tweet['in_reply_to_user_id_str']:
                     #twi_count += 1
                     try:
                         source = g.vs.find(name=tweet['user']['id_str'])
-                        target = g.vs.find(name=tweet['quoted_status']['user']['id_str'])
+                        #target = g.vs.find(name=tweet['quoted_status']['user']['id_str'])
+                        target = g.vs.find(name=tweet['in_reply_to_user_id_str'])
                         if source['cluster'] == target['cluster']:
                             twi_count_target += 1
                             twi_count += 1
@@ -213,7 +215,7 @@ if __name__ == "__main__":
     paths = []
     i = 0
     for path in all_paths:
-        print(path)
+        #print(path)
         if path[-12:-10] != pre_month:
             if paths != []:
                 #print(paths)
