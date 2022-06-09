@@ -224,6 +224,7 @@ if __name__ == "__main__":
         print('RT & quote : ' + str(len(set(g_rt.vs['name']) & set(g_quoted.vs['name'])) / min(len(set(g_rt.vs['name']), len(set(g_quoted.vs['name']))))))
         print('quote & reply : ' + str(len(set(g_reply.vs['name']) & set(g_quoted.vs['name'])) / min(len(set(g_reply.vs['name']), len(set(g_quoted.vs['name']))))))
         print('RT & reply : ' + str(len(set(g_reply.vs['name']) & set(g_rt.vs['name'])) / min(len(set(g_reply.vs['name']), len(set(g_rt.vs['name']))))))
+        print('\n')
     
                 
     """
