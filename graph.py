@@ -202,7 +202,9 @@ def calc_ration_over_communities(paths, g):
     
 
 if __name__ == "__main__":
-    #g = Graph.Read_GML('2020_07_quoted_clusters')
+    g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
+    print(len(set(g.vs['cluster'])))
+    """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
     paths = []
     pre_month = ''
@@ -216,7 +218,7 @@ if __name__ == "__main__":
         reply_result[info] = []
     #quoted_result['community edge ratio (RT network)'] = []
     #reply_result['community edge ratio (RT network)'] = []
-    """
+    
     paths = walk_dir('/home/narita/Twitter/graphs/RT')
     for path in paths:
         if path[-1] == 's':
@@ -239,7 +241,7 @@ if __name__ == "__main__":
     df_rt = df_rt.set_index('term')
     df_rt.to_csv("rt.csv", encoding="shift_jis")
     #paths = walk_dir('/home/narita/Twitter/graphs/reply')
-    """
+    
     for path in all_paths:
         if path[-12:-10] != pre_month:
             if paths != []:
@@ -291,3 +293,4 @@ if __name__ == "__main__":
     df_reply = pd.DataFrame(reply_result)
     df_reply = df_reply.set_index('term')
     df_reply.to_csv("reply.csv", encoding="shift_jis")
+    """
