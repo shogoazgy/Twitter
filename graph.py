@@ -196,6 +196,7 @@ def calc_ration_over_communities(paths, g):
                         target = g.vs.find(name=tweet['quoted_status']['user']['id_str'])
                         if source['cluster'] == target['cluster']:
                             twi_count_target += 1
+                            twi_count += 1
                         else:
                             twi_count += 1
                     except:
