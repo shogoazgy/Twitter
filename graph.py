@@ -190,12 +190,14 @@ def calc_ration_over_communities(paths, g):
                     break
                 tweet = json.loads(tweet)
                 if tweet['is_quote_status']:
-                    twi_count += 1
+                    #twi_count += 1
                     try:
                         source = g.vs.find(name=tweet['user']['id_str'])
                         target = g.vs.find(name=tweet['quoted_status']['user']['id_str'])
                         if source['cluster'] == target['cluster']:
                             twi_count_target += 1
+                        else:
+                            twi_count += 1
                     except:
                         pass
     return twi_count_target / twi_count
@@ -213,7 +215,7 @@ if __name__ == "__main__":
         print(path)
         if path[-12:-10] != pre_month:
             if paths != []:
-                print(paths)
+                #print(paths)
                 g = Graph.Read_GML(all_rt_path[i])
                 rate = calc_ration_over_communities(paths, g)
                 print(rate)
