@@ -6,15 +6,19 @@ import os
 
 urls = []
 
+img_found_count = 0
+
 async def fetch(url, session_get):
     async with session_get(url) as res:
         print(url)
         if res.status == 200:
-            pass
+            global img_found_count 
+            img_found_count += 1
         else:
             print('Z')
 
 def scan_tweet(paths, queue):
+    all_img_count = 0
     for path in paths:
         with open(path) as f:
             tweet = json.loads(f.readline().strip())
@@ -23,11 +27,12 @@ def scan_tweet(paths, queue):
                     if media['type'] == 'photo':
                         url = media['media_url_https']
                         queue.put_nowait(url)
-            elif 'extended_entities' in tweet['retweeted_status'].keys():
-                for media in tweet['extended_entities']['media']:
-                    if media['type'] == 'photo':
-                        url = media['media_url_https']
-                        queue.put_nowait(url)
+            elif 'retweeted_status' in tweet.keys():
+                    if 'extended_entities' in tweet['retweeted_status'].keys():
+                        for media in tweet['extended_entities']['media']:
+                            if media['type'] == 'photo':
+                                url = media['media_url_https']
+                                queue.put_nowait(url)
 
 async def worker(queue, session_get):
     while True:
