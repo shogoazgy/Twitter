@@ -35,7 +35,7 @@ def scan_tweet(paths, queue):
                             all_img_count += 1
                 elif 'retweeted_status' in tweet.keys():
                         if 'extended_entities' in tweet['retweeted_status'].keys():
-                            for media in tweet['extended_entities']['media']:
+                            for media in tweet['retweeted_status']['extended_entities']['media']:
                                 if media['type'] == 'photo':
                                     url = media['media_url_https']
                                     queue.put_nowait(url)
