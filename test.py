@@ -12,6 +12,7 @@ img_found_count = 0
 
 async def fetch(url, session_get):
     global img_found_count
+
     try:
         async with session_get(url) as res:
             print(url)
@@ -63,8 +64,8 @@ def walk_dir(path_origin):
 
 async def main(urls):
     tasks = []
-    to = aiohttp.ClientTimeout(total=5)
-    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100), timeout=to) as session:
+    #to = aiohttp.ClientTimeout(total=5)
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
         session_get = session.get
         #task = asyncio.ensure_future(worker(queue, session_get))
         tasks = [fetch(url, session_get) for url in urls]
