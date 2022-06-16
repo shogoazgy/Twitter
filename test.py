@@ -29,12 +29,14 @@ def scan_tweet(paths, queue):
                     if media['type'] == 'photo':
                         url = media['media_url_https']
                         queue.put_nowait(url)
+                        print('a')
             elif 'retweeted_status' in tweet.keys():
                     if 'extended_entities' in tweet['retweeted_status'].keys():
                         for media in tweet['extended_entities']['media']:
                             if media['type'] == 'photo':
                                 url = media['media_url_https']
                                 queue.put_nowait(url)
+                                print('a')
 
 async def worker(queue, session_get):
     while True:
