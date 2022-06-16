@@ -24,7 +24,7 @@ def scan_tweet(paths, queue):
         with open(path) as f:
             while True:
                 tweet = f.readline().strip()
-                if not t:
+                if not tweet:
                     break
                 tweet = json.loads(tweet)
                 if 'extended_entities' in tweet.keys():
