@@ -9,20 +9,22 @@ from io import BytesIO
 
 all_img_count= 0
 img_found_count = 0
-
+i = 0
 async def fetch(url, session_get):
     global img_found_count
-
+    global i
     try:
         async with session_get(url) as res:
-            print(url)
+            i += 1
+            print(i)
             if res.status == 200:
                 img_found_count += 1
             else:
                 print('Z')
     except:
         async with session_get(url) as res:
-            print(url)
+            i += 1
+            print(i)
             if res.status == 200:
                 img_found_count += 1
             else:
