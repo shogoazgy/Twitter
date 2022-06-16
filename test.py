@@ -1,4 +1,3 @@
-import imp
 import aiohttp
 import asyncio
 import json
