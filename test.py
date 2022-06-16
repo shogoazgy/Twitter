@@ -50,7 +50,7 @@ async def main():
     tasks = []
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
         session_get = session.get
-        task = asyncio.create_task(worker(queue, session_get))
+        task = asyncio.ensure_future(worker(queue, session_get))
         tasks.append(task)
     await queue.join()
     for task in tasks:
@@ -58,4 +58,4 @@ async def main():
     await asyncio.gather(*tasks, return_exceptions=True)
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.get_event_loop().run_until_complete(main())
