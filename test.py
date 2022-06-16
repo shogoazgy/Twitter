@@ -6,8 +6,7 @@ import os
 from PIL import Image
 from io import BytesIO
 
-urls = []
-
+all_img_count= 0
 img_found_count = 0
 
 async def fetch(url, session_get):
@@ -20,28 +19,31 @@ async def fetch(url, session_get):
             print('Z')
 
 def scan_tweet(paths, queue):
-    all_img_count = 0
+    global all_img_counT
     for path in paths:
         with open(path) as f:
-            tweet = json.loads(f.readline().strip())
-            if 'extended_entities' in tweet.keys():
-                for media in tweet['extended_entities']['media']:
-                    if media['type'] == 'photo':
-                        url = media['media_url_https']
-                        queue.put_nowait(url)
-                        print('a')
-            elif 'retweeted_status' in tweet.keys():
-                    if 'extended_entities' in tweet['retweeted_status'].keys():
-                        for media in tweet['extended_entities']['media']:
-                            if media['type'] == 'photo':
-                                url = media['media_url_https']
-                                queue.put_nowait(url)
-                                print('a')
+            while True:
+                tweet = f.readline().strip()
+                if not t:
+                    break
+                tweet = json.loads(tweet)
+                if 'extended_entities' in tweet.keys():
+                    for media in tweet['extended_entities']['media']:
+                        if media['type'] == 'photo':
+                            url = media['media_url_https']
+                            queue.put_nowait(url)
+                            all_img_count += 1
+                elif 'retweeted_status' in tweet.keys():
+                        if 'extended_entities' in tweet['retweeted_status'].keys():
+                            for media in tweet['extended_entities']['media']:
+                                if media['type'] == 'photo':
+                                    url = media['media_url_https']
+                                    queue.put_nowait(url)
+                                    all_img_count += 1
 
 async def worker(queue, session_get):
     while True:
         url = await queue.get()
-        print('x')
         await fetch(url, session_get)
         queue.task_done()
 
@@ -59,7 +61,6 @@ async def main():
     queue = asyncio.Queue()
     scan_tweet(paths, queue)
     print(queue)
-    print('e')
     tasks = []
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
         session_get = session.get
@@ -69,6 +70,8 @@ async def main():
     for task in tasks:
         task.cancel()
     await asyncio.gather(*tasks, return_exceptions=True)
+    print(all_img_count)
+    print(img_found_count)
 
 if __name__ == '__main__':
     asyncio.get_event_loop().run_until_complete(main())
