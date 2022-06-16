@@ -17,6 +17,7 @@ async def fetch(url, session_get):
             img_found_count += 1
         else:
             print('Z')
+        return 0
 
 def scan_tweet(paths, queue):
     global all_img_count
