@@ -1,4 +1,5 @@
 from asyncio import tasks
+from socket import timeout
 import aiohttp
 import asyncio
 import json
@@ -11,13 +12,20 @@ img_found_count = 0
 
 async def fetch(url, session_get):
     global img_found_count
-    async with session_get(url) as res:
-        print(url)
-        if res.status == 200:
-            img_found_count += 1
-        else:
-            print('Z')
-        return 0
+    try:
+        async with session_get(url) as res:
+            print(url)
+            if res.status == 200:
+                img_found_count += 1
+            else:
+                print('Z')
+    except:
+        async with session_get(url) as res:
+            print(url)
+            if res.status == 200:
+                img_found_count += 1
+            else:
+                print('Z')
 
 def scan_tweet(paths):
     global all_img_count
@@ -44,13 +52,6 @@ def scan_tweet(paths):
                                     all_img_count += 1
     return urls
 
-async def worker(queue, session_get):
-    while True:
-        print('g')
-        url = await queue.get()
-        await fetch(url, session_get)
-        queue.task_done()
-
 def walk_dir(path_origin):
     paths = []
     for pathname, dirnames, filenames in os.walk(path_origin):
@@ -61,9 +62,9 @@ def walk_dir(path_origin):
 
 
 async def main(urls):
-    print('a')
     tasks = []
-    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=5)) as session:
+    timeout = aiohttp.ClientTimeout(total=5)
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100), timeout=timeout) as session:
         session_get = session.get
         #task = asyncio.ensure_future(worker(queue, session_get))
         tasks = [fetch(url, session_get) for url in urls]
@@ -74,5 +75,5 @@ async def main(urls):
 if __name__ == '__main__':
     paths = walk_dir('/home/narita/2020-covid-media-test/')
     urls = scan_tweet(paths)
-    print('loop')
+    print('x')
     asyncio.get_event_loop().run_until_complete(main(urls))
