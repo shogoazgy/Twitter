@@ -63,16 +63,13 @@ def walk_dir(path_origin):
 async def main(urls):
     print('a')
     tasks = []
-    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=5)) as session:
         session_get = session.get
         #task = asyncio.ensure_future(worker(queue, session_get))
         tasks = [fetch(url, session_get) for url in urls]
-        print('v')
-    print('z')
-    print('start')
-    await asyncio.wait(tasks)
-    print(all_img_count)
-    print(img_found_count)
+        await asyncio.wait(tasks)
+        print(all_img_count)
+        print(img_found_count)
 
 if __name__ == '__main__':
     paths = walk_dir('/home/narita/2020-covid-media-test/')
