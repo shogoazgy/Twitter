@@ -19,8 +19,9 @@ async def fetch(url, session_get):
             print('Z')
         return 0
 
-def scan_tweet(paths, queue):
+def scan_tweet(paths):
     global all_img_count
+    urls = []
     for path in paths:
         with open(path) as f:
             while True:
@@ -32,15 +33,16 @@ def scan_tweet(paths, queue):
                     for media in tweet['extended_entities']['media']:
                         if media['type'] == 'photo':
                             url = media['media_url_https']
-                            queue.put_nowait(url)
+                            urls.append(url)
                             all_img_count += 1
                 elif 'retweeted_status' in tweet.keys():
                         if 'extended_entities' in tweet['retweeted_status'].keys():
                             for media in tweet['retweeted_status']['extended_entities']['media']:
                                 if media['type'] == 'photo':
                                     url = media['media_url_https']
-                                    queue.put_nowait(url)
+                                    urls.append(url)
                                     all_img_count += 1
+    return urls
 
 async def worker(queue, session_get):
     while True:
@@ -58,26 +60,22 @@ def walk_dir(path_origin):
     return paths
 
 
-async def main(queue):
+async def main(urls):
     print('a')
     tasks = []
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
         session_get = session.get
-        task = asyncio.ensure_future(worker(queue, session_get))
+        #task = asyncio.ensure_future(worker(queue, session_get))
+        tasks = [fetch(url, session_get) for url in urls]
         print('v')
-        tasks.append(task)
-    await queue.join()
     print('z')
-    for task in tasks:
-        task.cancel()
     print('start')
-    await asyncio.gather(*tasks, return_exceptions=True)
+    await asyncio.wait(tasks)
     print(all_img_count)
     print(img_found_count)
 
 if __name__ == '__main__':
     paths = walk_dir('/home/narita/2020-covid-media-test/')
-    queue = asyncio.Queue()
-    scan_tweet(paths, queue)
+    urls = scan_tweet(paths)
     print('loop')
-    asyncio.get_event_loop().run_until_complete(main(queue))
+    asyncio.get_event_loop().run_until_complete(main(urls))
