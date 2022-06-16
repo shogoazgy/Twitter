@@ -64,7 +64,7 @@ def walk_dir(path_origin):
 
 async def main(urls):
     tasks = []
-    #to = aiohttp.ClientTimeout(total=5)
+    to = aiohttp.ClientTimeout(total=10)
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
         session_get = session.get
         #task = asyncio.ensure_future(worker(queue, session_get))
