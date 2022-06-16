@@ -3,6 +3,8 @@ import aiohttp
 import asyncio
 import json
 import os
+from PIL import Image
+from io import BytesIO
 
 urls = []
 
@@ -37,6 +39,7 @@ def scan_tweet(paths, queue):
 async def worker(queue, session_get):
     while True:
         url = await queue.get()
+        print('x')
         await fetch(url, session_get)
         queue.task_done()
 
@@ -53,6 +56,7 @@ async def main():
     paths = walk_dir('/home/narita/2020-covid-media-test/')
     queue = asyncio.Queue()
     scan_tweet(paths, queue)
+    print('e')
     tasks = []
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
         session_get = session.get
