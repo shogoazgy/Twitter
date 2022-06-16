@@ -43,6 +43,7 @@ def scan_tweet(paths, queue):
 
 async def worker(queue, session_get):
     while True:
+        print('g')
         url = await queue.get()
         await fetch(url, session_get)
         queue.task_done()
@@ -62,6 +63,7 @@ async def main(queue):
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
         session_get = session.get
         task = asyncio.ensure_future(worker(queue, session_get))
+        print('v')
         tasks.append(task)
     await queue.join()
     print('z')
