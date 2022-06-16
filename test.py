@@ -1,3 +1,4 @@
+from asyncio import tasks
 import aiohttp
 import asyncio
 import json
@@ -13,7 +14,7 @@ async def fetch(url, session_get):
         else:
             print('Z')
 
-async def scan_tweet(paths, queue):
+def scan_tweet(paths, queue):
     for path in paths:
         with open(path) as f:
             tweet = json.loads(f.readline().strip())
