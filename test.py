@@ -19,7 +19,7 @@ async def fetch(url, session_get):
             print('Z')
 
 def scan_tweet(paths, queue):
-    global all_img_counT
+    global all_img_count
     for path in paths:
         with open(path) as f:
             while True:
