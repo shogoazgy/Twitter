@@ -68,6 +68,7 @@ async def main(urls):
         session_get = session.get
         #task = asyncio.ensure_future(worker(queue, session_get))
         tasks = [fetch(url, session_get) for url in urls]
+        print('task start')
         await asyncio.wait(tasks)
         print(all_img_count)
         print(img_found_count)
