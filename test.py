@@ -10,10 +10,10 @@ all_img_count= 0
 img_found_count = 0
 
 async def fetch(url, session_get):
+    global img_found_count
     async with session_get(url) as res:
         print(url)
         if res.status == 200:
-            global img_found_count 
             img_found_count += 1
         else:
             print('Z')
