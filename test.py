@@ -56,6 +56,7 @@ async def main():
     paths = walk_dir('/home/narita/2020-covid-media-test/')
     queue = asyncio.Queue()
     scan_tweet(paths, queue)
+    print(queue)
     print('e')
     tasks = []
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
