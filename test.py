@@ -57,12 +57,14 @@ def walk_dir(path_origin):
 
 
 async def main(queue):
+    print('a')
     tasks = []
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
         session_get = session.get
         task = asyncio.ensure_future(worker(queue, session_get))
         tasks.append(task)
     await queue.join()
+    print('z')
     for task in tasks:
         task.cancel()
     print('start')
@@ -74,4 +76,5 @@ if __name__ == '__main__':
     paths = walk_dir('/home/narita/2020-covid-media-test/')
     queue = asyncio.Queue()
     scan_tweet(paths, queue)
+    print('loop')
     asyncio.get_event_loop().run_until_complete(main(queue))
