@@ -21,14 +21,14 @@ async def fetch(url, session_get):
             if res.status == 200:
                 img_found_count += 1
             else:
-                print('Z')
+                print('1 X')
     except:
         async with session_get(url) as res:
             print('あああああああああああああああああああああ')
             if res.status == 200:
                 img_found_count += 1
             else:
-                print('Z')
+                print('2 X')
 
 def scan_tweet(paths):
     global all_img_count
