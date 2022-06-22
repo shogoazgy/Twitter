@@ -16,7 +16,8 @@ async def fetch(url, session_get):
     try:
         async with session_get(url) as res:
             i += 1
-            print(i)
+            if i % 100 == 0:
+                print(i)
             if res.status == 200:
                 img_found_count += 1
             else:
