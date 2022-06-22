@@ -23,8 +23,7 @@ async def fetch(url, session_get):
                 print('Z')
     except:
         async with session_get(url) as res:
-            i += 1
-            print(i)
+            print('あああああああああああああああああああああ')
             if res.status == 200:
                 img_found_count += 1
             else:
@@ -69,7 +68,7 @@ async def main(urls):
     to = aiohttp.ClientTimeout(total=10)
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100)) as session:
         session_get = session.get
-        #task = asyncio.ensure_future(worker(queue, session_get))
+        print(len(urls))
         tasks = [fetch(url, session_get) for url in urls]
         print('task start')
         await asyncio.wait(tasks)
