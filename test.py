@@ -21,7 +21,7 @@ async def fetch(url, session_get):
             if res.status == 200:
                 img_found_count += 1
             else:
-                print(res.status)
+                print(str(res.status) + ' : ' + str(url))
     except:
         async with session_get(url) as res:
             print('あああああああああああああああああああああ')
