@@ -92,7 +92,6 @@ async def main(records):
 
 if __name__ == '__main__':
     paths = walk_dir('/home/narita/2020-covid-media-test/')
-    record_list = []
     with open('url_set.txt') as f:
         url_set = set(f.read().splitlines())
     with open('not_found_urls.txt') as f:
@@ -102,12 +101,13 @@ if __name__ == '__main__':
         print(path)
         records, url_set = scan_tweet(path, url_set)
         print(len(records))
+        print(len(url_set))
         asyncio.get_event_loop().run_until_complete(main(records))
         with open('record.txt', 'a') as w:
-            for record in record_list:
+            for record in records:
                 if record.split(',')[0] not in set(not_found_urls):
                     w.write(record + '\n')
-        record_list = []
+        records = []
         time.sleep(100)
     
     with open('url_set.txt', 'wt') as w:
