@@ -39,7 +39,6 @@ async def fetch(record, session_get):
                 not_found_urls.append(url)
 
 def scan_tweet(path, url_set):
-    global record_list
     global not_found_urls
     records = []
     with open(path) as f:
@@ -101,8 +100,9 @@ if __name__ == '__main__':
     
     for path in paths:
         print(path)
-        urls, url_set = scan_tweet(path, url_set)
-        asyncio.get_event_loop().run_until_complete(main(urls))
+        records, url_set = scan_tweet(path, url_set)
+        print(len(records))
+        asyncio.get_event_loop().run_until_complete(main(records))
         with open('record.txt', 'a') as w:
             for record in record_list:
                 if record.split(',')[0] not in set(not_found_urls):
