@@ -41,6 +41,7 @@ def convert(std_time, times):
 
 
 if __name__ == '__main__':
+    """
     paths = walk_dir('/home/narita/2020-covid-media-02-07')
     rt_d = collections.defaultdict(list)
     quote_d = collections.defaultdict(list)
@@ -50,6 +51,7 @@ if __name__ == '__main__':
         for k, rt in rt_d.items():
             if len(rt) >= 10000:
                 w.write(str(k) + ',' + str(time_dict[k]) + ',' + ','.join(rt) + '\n')
+    """
     with open('10000_rt.txt') as f:
         for _ in range(10):
             t = f.readline().strip().split(',')
@@ -57,3 +59,4 @@ if __name__ == '__main__':
             plt.hist(x[2:], bins=50)
             plt.savefig(str(t[0]) + '.png')
             plt.clf()
+    
