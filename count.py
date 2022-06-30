@@ -37,7 +37,7 @@ def convert(std_time, times):
     std = datetime.datetime.strptime(std_time, '%a %b %d %H:%M:%S %z %Y')
 
     for t in times:
-        x.append((std - datetime.datetime.strptime(t, '%a %b %d %H:%M:%S %z %Y')).total_seconds())
+        x.append((datetime.datetime.strptime(t, '%a %b %d %H:%M:%S %z %Y') - std).total_seconds())
     return x
 
 
