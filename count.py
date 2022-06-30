@@ -36,7 +36,7 @@ def convert(std_time, times):
 
 
 if __name__ == '__main__':
-    paths = walk_dir('')
+    paths = walk_dir('/home/narita/2020-covid-media-02-07')
     rt_d = collections.defaultdict(list)
     quote_d = collections.defaultdict(list)
     time_dict = collections.defaultdict(str)
