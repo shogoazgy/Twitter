@@ -33,6 +33,7 @@ def main(paths):
 
 def convert(std_time, times):
     x = []
+    print(std_time)
     std = datetime.datetime().strptime(std_time, '%a %b %d %H:%M:%S %z %Y')
 
     for t in times:
