@@ -17,6 +17,7 @@ def main(paths):
     global quote_d
     global time_dict
     for path in paths:
+        print(path)
         with open(path) as f:
             while True:
                 tweet = f.readline().strip()
@@ -36,6 +37,7 @@ def convert(std_time, times):
 
     for t in times:
         x.append((std - datetime.datetime().strptime(t, '%a %b %d %H:%M:%S %z %Y')).total_seconds())
+    return x
 
 
 if __name__ == '__main__':
@@ -51,7 +53,7 @@ if __name__ == '__main__':
     with open('10000_rt.txt') as f:
         for _ in range(10):
             t = f.readline().strip().split(',')
-            x = convert(t[1] + t[2:])
+            x = convert(t[1], t[2:])
             plt.hist(x[2:], bins=50)
             plt.savefig(str(t[0]) + '.png')
             plt.clf()
