@@ -53,7 +53,7 @@ if __name__ == '__main__':
     with open('100_quote.txt', 'wt') as w:
         for k, q in quote_d.items():
             if len(q) >= 100:
-                w.write(str(k) + ',' + str(time_dict[k]) + ',' + ','.join() + '\n')
+                w.write(str(k) + ',' + str(time_dict[k]) + ',' + ','.join(q) + '\n')
     """
     with open('10000_rt.txt') as f:
         for _ in range(10):
