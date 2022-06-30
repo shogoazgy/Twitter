@@ -29,6 +29,7 @@ def main(paths):
                     time_dict[tweet['retweeted_status']['id_str']] = tweet['retweeted_status']['created_at']
                 elif 'quoted_status' in tweet.keys():
                     quote_d[tweet['quoted_status']['id_str']].append(tweet['created_at'])
+                    quote_d[tweet['quoted_status']['id_str']].append(str(len(tweet['text'])))
                     time_dict[tweet['quoted_status']['id_str']] = tweet['quoted_status']['created_at']
 
 def convert(std_time, times):
@@ -42,16 +43,17 @@ def convert(std_time, times):
 
 
 if __name__ == '__main__':
-    """
+    
     paths = walk_dir('/home/narita/2020-covid-media-02-07')
     rt_d = collections.defaultdict(list)
     quote_d = collections.defaultdict(list)
     time_dict = collections.defaultdict(str)
+    quote_len_dict = collections.defaultdict(int)
     main(paths)
-    with open('10000_rt.txt', 'wt') as w:
-        for k, rt in rt_d.items():
-            if len(rt) >= 10000:
-                w.write(str(k) + ',' + str(time_dict[k]) + ',' + ','.join(rt) + '\n')
+    with open('100_quote.txt', 'wt') as w:
+        for k, q in quote_d.items():
+            if len(q) >= 100:
+                w.write(str(k) + ',' + str(time_dict[k]) + ',' + ','.join() + '\n')
     """
     with open('10000_rt.txt') as f:
         for _ in range(10):
@@ -60,4 +62,5 @@ if __name__ == '__main__':
             plt.hist(x[2:], bins=100, range=(0, 500000))
             plt.savefig('count_image/' + str(t[0]) + '.png')
             plt.clf()
+    """
     
