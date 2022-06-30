@@ -13,6 +13,9 @@ def walk_dir(path_origin):
     return paths
 
 def main(paths):
+    global rt_d
+    global quote_d
+    global time_dict
     for path in paths:
         with open(path) as f:
             while True:
@@ -40,6 +43,7 @@ if __name__ == '__main__':
     rt_d = collections.defaultdict(list)
     quote_d = collections.defaultdict(list)
     time_dict = collections.defaultdict(str)
+    main(paths)
     with open('10000_rt.txt', 'wt') as w:
         for k, rt in rt_d.items():
             if len(rt) >= 10000:
