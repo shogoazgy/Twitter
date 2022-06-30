@@ -49,7 +49,7 @@ if __name__ == '__main__':
     with open('10000_rt.txt', 'wt') as w:
         for k, rt in rt_d.items():
             if len(rt) >= 10000:
-                w.write(str(k) + ',' + str(time_dict[k]) + ',' + ','.join(rt))
+                w.write(str(k) + ',' + str(time_dict[k]) + ',' + ','.join(rt) + '\n')
     with open('10000_rt.txt') as f:
         for _ in range(10):
             t = f.readline().strip().split(',')
