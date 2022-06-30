@@ -57,7 +57,7 @@ if __name__ == '__main__':
         for _ in range(10):
             t = f.readline().strip().split(',')
             x = convert(t[1], t[2:])
-            plt.hist(x[2:], bins=100, range=(0, 2000000))
+            plt.hist(x[2:], bins=100, range=(0, 500000))
             plt.savefig(str(t[0]) + '.png')
             plt.clf()
     
