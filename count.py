@@ -71,7 +71,8 @@ if __name__ == '__main__':
             plt.hist(x, bins=100, range=(0, 500000))
             plt.savefig('count_image/' + str(t[0]) + '.png')
             plt.clf()
-            plt.scatter(x, x_t[1::2])
+            y = [int(a) for a in x_t[1::2]]
+            plt.scatter(x, y)
             plt.savefig('len_text/' + str(t[0]) + '.png')
             plt.clf()
 
