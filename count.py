@@ -63,7 +63,7 @@ if __name__ == '__main__':
             plt.savefig('count_image/' + str(t[0]) + '.png')
             plt.clf()
     """
-    with open('1000_quote.txt') as f:
+    with open('100_quote.txt') as f:
         for _ in range(10000):
             t = f.readline().strip().split(',')
             x_t = t[2:]
