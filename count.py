@@ -62,7 +62,7 @@ if __name__ == '__main__':
             plt.hist(x[2:], bins=100, range=(0, 500000))
             plt.savefig('count_image/' + str(t[0]) + '.png')
             plt.clf()
-    """
+    
     with open('100_quote.txt') as f:
         for _ in range(10000):
             t = f.readline().strip().split(',')
@@ -75,5 +75,9 @@ if __name__ == '__main__':
             plt.scatter(x, y)
             plt.savefig('len_text/' + str(t[0]) + '.png')
             plt.clf()
+    """
+    paths = walk_dir('/home/narita/2020-covid-media-02-07')
+    with open('10000_rt.txt') as f:
+        print(len(f.readlines()))
 
     
