@@ -99,7 +99,7 @@ if __name__ == '__main__':
                         text_set_dict[tweet['quoted_status']['id_str']].add(tweet['text'])
         break
     for k, q in text_set_dict.items():
-        with open(str(k) + '_quoted_texts.csv', 'wt') as w:
+        with open('quote_texts/' + str(k) + '_quoted_texts.csv', 'wt') as w:
             for text in q:
                 w.write(text, '', sep=',')
     
