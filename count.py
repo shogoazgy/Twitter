@@ -103,5 +103,5 @@ if __name__ == '__main__':
     for k, q in text_set_dict.items():
         with open('quote_texts/' + str(k) + '_quoted_texts.csv', 'wt') as w:
             for text in q:
-                w.write(str(text) + ',' + '') 
+                w.write(str(text) + ',' + '\n') 
     
