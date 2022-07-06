@@ -41,7 +41,6 @@ def convert(std_time, times):
         x.append((datetime.datetime.strptime(t, '%a %b %d %H:%M:%S %z %Y') - std).total_seconds())
     return x
 
-
 if __name__ == '__main__':
     """
     paths = walk_dir('/home/narita/2020-covid-media-02-07')
@@ -77,7 +76,30 @@ if __name__ == '__main__':
             plt.clf()
     """
     paths = walk_dir('/home/narita/2020-covid-media-02-07')
+    target_set = set()
+    text_set_dict = collections.defaultdict(set)
     with open('10000_rt.txt') as f:
-        print(len(f.readlines()))
-
+        while True:
+            t = f.readline()
+            if not t:
+                break
+            t = t.split(',')
+            target_set.add(t[0])
+    
+    for path in paths:
+        print(path)
+        with open(path) as f:
+            while True:
+                tweet = f.readline().strip()
+                if not tweet:
+                    break
+                tweet = json.loads(tweet)
+                if 'quoted_status' in tweet.keys():
+                    if tweet['quoted_status']['id_str'] in target_set:
+                        text_set_dict[tweet['quoted_status']['id_str']].add(tweet['text'])
+        break
+    for k, q in text_set_dict.items():
+        with open(str(k) + '_quoted_texts.csv', 'wt') as w:
+            for text in q:
+                w.write(text, '', sep=',')
     
