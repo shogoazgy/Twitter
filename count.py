@@ -85,7 +85,6 @@ if __name__ == '__main__':
                 break
             t = t.split(',')
             target_set.add(t[0])
-    i = 0
     for path in paths:
         print(path)
         with open(path) as f:
@@ -97,11 +96,9 @@ if __name__ == '__main__':
                 if 'quoted_status' in tweet.keys():
                     if tweet['quoted_status']['id_str'] in target_set:
                         text_set_dict[tweet['quoted_status']['id_str']].add(tweet['text'])
-        i += 1
-        if i > 10:
-            break
     for k, q in text_set_dict.items():
         with open('quote_texts/' + str(k) + '_quoted_texts.csv', 'wt') as w:
+            w.write('quote tweet id,quote text,label')
             for text in q:
-                w.write(repr(str(text)) + ',' + '\n')
+                w.write(str(k) + ',' + repr(str(text))[1:-1] + ',' + '\n')
     
