@@ -77,7 +77,7 @@ if __name__ == '__main__':
     """
     paths = walk_dir('/home/narita/2020-covid-media-02-07')
     target_set = set()
-    text_set_dict = collections.defaultdict(set)
+    text_set_dict = collections.defaultdict(list)
     with open('10000_rt.txt') as f:
         while True:
             t = f.readline()
@@ -95,10 +95,10 @@ if __name__ == '__main__':
                 tweet = json.loads(tweet)
                 if 'quoted_status' in tweet.keys():
                     if tweet['quoted_status']['id_str'] in target_set:
-                        text_set_dict[tweet['quoted_status']['id_str']].add(tweet['text'])
+                        text_set_dict[tweet['quoted_status']['id_str']].append([tweet['id_str'], tweet['text']])
     for k, q in text_set_dict.items():
         with open('quote_texts/' + str(k) + '_quoted_texts.csv', 'wt') as w:
             w.write('quote tweet id,quote text,label\n')
-            for text in q:
-                w.write(str(k) + ',' + repr(str(text))[1:-1] + ',' + '\n')
+            for id_str, text in q:
+                w.write(str(id_str) + ',' + repr(str(text))[1:-1] + ',' + '\n')
     
