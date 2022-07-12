@@ -98,7 +98,7 @@ if __name__ == '__main__':
                         text_set_dict[tweet['quoted_status']['id_str']].add(tweet['text'])
     for k, q in text_set_dict.items():
         with open('quote_texts/' + str(k) + '_quoted_texts.csv', 'wt') as w:
-            w.write('quote tweet id,quote text,label')
+            w.write('quote tweet id,quote text,label\n')
             for text in q:
                 w.write(str(k) + ',' + repr(str(text))[1:-1] + ',' + '\n')
     
