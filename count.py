@@ -86,7 +86,7 @@ if __name__ == '__main__':
                 if not tweet:
                     break
                 tweet = json.loads(tweet)
-                if tweet['quoted_status']['text'][:2] != 'RT':
+                if tweet['text'][:2] != 'RT':
                     quoted_count_dict[tweet['quoted_status']['id_str']] += 1
     quoted_count_counter = collections.Counter(dict(quoted_count_dict))
     target_set = set()
@@ -107,7 +107,7 @@ if __name__ == '__main__':
                 if not tweet:
                     break
                 tweet = json.loads(tweet)
-                if tweet['quoted_status']['id_str'] in target_set and tweet['quoted_status']['text'][:2] != 'RT':
+                if tweet['quoted_status']['id_str'] in target_set and tweet['text'][:2] != 'RT':
                     text_set_dict[tweet['quoted_status']['id_str']].append([tweet['id_str'], tweet['text']])
     for k, q in text_set_dict.items():
         with open('quote_texts/' + str(k) + '_quoted_texts.csv', 'wt') as w:
