@@ -93,7 +93,7 @@ if __name__ == '__main__':
     with open('most_quoted_tweeets.csv', 'wt') as f:
         f.write('id_str,count\n')
         for kc in quoted_count_counter.most_common():
-            f.write(kc[0] + ',' + kc[1] + '\n')
+            f.write(kc[0] + ',' + str(kc[1]) + '\n')
     for kc in quoted_count_counter.most_common(100):
         target_set.add(kc[0])
     del quoted_count_dict
