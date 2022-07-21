@@ -44,29 +44,6 @@ def get_tf_idf(text_list):
     vectorizer.fit(text_list)
     return vectorizer
 
-def extract_users(path_origin, size, file_name='rt_users'):
-    with open(file_name + '.txt', 'wt') as w:
-        flag = 0
-        for i in range(9, size):
-            print(i)
-            path = path_origin + str(i)
-            with open(path) as f:
-                while True:
-                    t = f.readline()
-                    if not t:
-                        break
-                    t = t.strip()
-                    t = json.loads(t)
-                    if flag:
-                        rt_rted = str(t['user']['id_str']) + ',' + str(t['retweeted_status']['user']['id_str'])
-                        w.write(rt_rted + '\n')
-                    else:
-                        if change_time(t['created_at']) == '2021-01-01':
-                            flag = 1
-                            rt_rted = str(t['user']['id_str']) + ',' + str(t['retweeted_status']['user']['id_str'])
-                            w.write(rt_rted + '\n')
-
-
 def change_time(created_at, only_date=True):
     st = time.strptime(created_at, '%a %b %d %H:%M:%S +0000 %Y')        
     utc_time = datetime.datetime(st.tm_year, st.tm_mon,st.tm_mday, st.tm_hour,st.tm_min,st.tm_sec, tzinfo=datetime.timezone.utc)   
@@ -107,4 +84,4 @@ def walk_dir(path_origin, since=None, until=None):
                 
 
 if __name__ == "__main__":
-    g = g = Graph.Read_Ncol('/Users/shougo/Downloads/graphs_clusters/2020_04_clusters')
+    g = Graph.Read_Ncol('/Users/shougo/Downloads/graphs_clusters/2020_04_clusters')

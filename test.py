@@ -7,6 +7,7 @@ import json
 import os
 import collections 
 import pickle
+import tqdm
 
 from PIL import Image
 from io import BytesIO

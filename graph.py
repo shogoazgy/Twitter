@@ -205,32 +205,25 @@ def calc_ration_over_communities(paths, g):
                         pass
     return twi_count_target / twi_count
     
+def scan_tweet(paths):
+    for path in paths:
+        with open(path) as f:
+            tweet = json.loads(f.readline().strip())
+
+def extract_image_urls(tweet):
+    if 'extended_entities' in tweet.keys():
+        for media in tweet['extended_entities']['media']:
+            if media['type'] == 'photo':
+                url = media['media_url_https']
+    elif 'extended_entities' in tweet['retweeted_status'].keys():
+        pass
+
+
 
 if __name__ == "__main__":
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
-    all_rt_path = walk_dir('/home/narita/Twitter/graphs/RT/')
-    all_quoted_path = walk_dir('/home/narita/Twitter/graphs/quoted/')
-    all_reply_path = walk_dir('/home/narita/Twitter/graphs/reply/')
-    m = 2
-    print(len(all_quoted_path))
-    print(len(all_rt_path))
-    print(len(all_reply_path))
-    for i in range(len(all_quoted_path)):
-        g_rt = Graph.Read_GML(all_rt_path[i])
-        g_quoted = Graph.Read_GML(all_quoted_path[i])
-        g_reply = Graph.Read_GML(all_reply_path[i])
-        print(str(m) + '月')
-        m += 1
-        rt_set = set(g_rt.vs['name'])
-        reply_set = set(g_reply.vs['name'])
-        quoted_set = set(g_quoted.vs['name'])
-        print('RT & quote : ' + str(len(rt_set & quoted_set) / min(len(rt_set), len(quoted_set))))
-        print('quote & reply : ' + str(len(reply_set & quoted_set) / min(len(reply_set), len(quoted_set))))
-        print('RT & reply : ' + str(len(reply_set & rt_set) / min(len(reply_set), len(rt_set))))
-        print('\n')
     
-                
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
     paths = []
