@@ -76,19 +76,7 @@ if __name__ == '__main__':
             plt.savefig('len_text/' + str(t[0]) + '.png')
             plt.clf()
     """
-    paths = walk_dir('/home/narita/all_quote_2020_half1')
-    quoted_count_dict = collections.defaultdict(int)
-    for path in paths:
-        print(path)
-        with open(path) as f:
-            while True:
-                tweet = f.readline().strip()
-                if not tweet:
-                    break
-                tweet = json.loads(tweet)
-                if tweet['text'][:2] != 'RT':
-                    quoted_count_dict[tweet['quoted_status']['id_str']] += 1
-    quoted_count_counter = collections.Counter(dict(quoted_count_dict))
+    """
     target_set = set()
     with open('most_quoted_tweeets.csv', 'wt') as f:
         f.write('id_str,count\n')
@@ -98,7 +86,18 @@ if __name__ == '__main__':
         target_set.add(kc[0])
     del quoted_count_dict
     del quoted_count_counter
+    """
     text_set_dict = collections.defaultdict(list)
+    target_set = set()
+    with open('10000_rt.txt') as f:
+        while True:
+            t = f.readline()
+            if not t:
+                break
+            t = t.split(',')
+            target_set.add(t[0])
+
+    paths = walk_dir('/home/narita/all_quote_2020_half1')
     for path in paths:
         print(path)
         with open(path) as f:
@@ -110,7 +109,7 @@ if __name__ == '__main__':
                 if tweet['quoted_status']['id_str'] in target_set and tweet['text'][:2] != 'RT':
                     text_set_dict[tweet['quoted_status']['id_str']].append([tweet['id_str'], tweet['text']])
     for k, q in text_set_dict.items():
-        with open('quote_texts/' + str(k) + '_quoted_texts.csv', 'wt') as w:
+        with open('quote_texts_covid/' + str(k) + '_quoted_texts.csv', 'wt') as w:
             w.write('quote tweet id,quote text,label\n')
             for id_str, text in q:
                 w.write(str(id_str) + ',' + repr(str(text))[1:-1] + ',' + '\n')
