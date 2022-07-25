@@ -112,5 +112,5 @@ if __name__ == '__main__':
         with open('quote_texts_covid/' + str(k) + '_quoted_texts.csv', 'wt') as w:
             w.write('quote tweet id,quote text,label\n')
             for id_str, text, created_at in q:
-                w.write(str(id_str) + ',' + repr(str(text))[1:-1] + ',,' created_at + '\n')
+                w.write(str(id_str) + ',' + repr(str(text))[1:-1] + ',,' +  created_at + '\n')
     
