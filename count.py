@@ -107,10 +107,10 @@ if __name__ == '__main__':
                     break
                 tweet = json.loads(tweet)
                 if tweet['quoted_status']['id_str'] in target_set and tweet['text'][:2] != 'RT':
-                    text_set_dict[tweet['quoted_status']['id_str']].append([tweet['id_str'], tweet['text']])
+                    text_set_dict[tweet['quoted_status']['id_str']].append([tweet['id_str'], tweet['text'], tweet['created_at']])
     for k, q in text_set_dict.items():
         with open('quote_texts_covid/' + str(k) + '_quoted_texts.csv', 'wt') as w:
             w.write('quote tweet id,quote text,label\n')
-            for id_str, text in q:
-                w.write(str(id_str) + ',' + repr(str(text))[1:-1] + ',' + '\n')
+            for id_str, text, created_at in q:
+                w.write(str(id_str) + ',' + repr(str(text))[1:-1] + ',,' created_at + '\n')
     
