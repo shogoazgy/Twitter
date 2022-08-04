@@ -221,7 +221,7 @@ if __name__ == "__main__":
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
     paths = walk_dir('/home/narita/2020-ex-rt-jp')
-    build_network(paths, '2020_04_quote')
+    g = build_network(paths, '2020_04_quote')
     summary(g)
     p = clustering(g)
     g.vs['cluster'] = p.membership
