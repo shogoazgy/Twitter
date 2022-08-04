@@ -220,18 +220,15 @@ def extract_image_urls(tweet):
 if __name__ == "__main__":
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
-    """
-    paths = walk_dir('/home/narita/2020-ex-rt-jp')
-    g = build_network(paths, '2020_04_quote')
+    paths = walk_dir('/home/narita/all_quote_2020_half1')
+    g = build_network(paths, '2020_04_quote_all')
     summary(g)
     p = clustering(g)
     g.vs['cluster'] = p.membership
     print(len(p))
-    save_gml(g, '2020_04_quote')
-    """
-    g = Graph.Read_GML('2020_04_quote')
+    save_gml(g, '2020_04_quote_all')
     p = clustering(g)
-    plot_cluster(p, '2020_04_quote')
+    plot_cluster(p, '2020_04_quote_all')
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
     paths = []
