@@ -1,5 +1,6 @@
 #from importlib.resources import path
 from html import entities
+from importlib.resources import path
 from statistics import mode
 from tkinter.messagebox import NO
 from unicodedata import name
@@ -110,6 +111,7 @@ def build_network(paths, save_filename, mode='quoted'):
     c = 0
     for path in paths:
         print(path)
+        print(path[-12:-10])
         with open(path, 'r') as f:
             while True:
                 tweet = f.readline().strip()
@@ -223,7 +225,8 @@ def extract_image_urls(tweet):
 if __name__ == "__main__":
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
-    
+    paths = walk_dir('/home/narita/2020-ex-rt-jp')
+    build_network(paths, 'test')
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
     paths = []
