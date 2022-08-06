@@ -223,13 +223,58 @@ if __name__ == "__main__":
     #paths = walk_dir('/home/narita/all_quote_2020_half1')
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
-    g = Graph.Read_GML('2020_04_quote_all')
-    p = clustering(g)
-    g.vs['cluster'] = p.membership
-    print(len(p))
-    save_gml(g, '2020_04_quote_all')
-    p = clustering(g)
-    plot_cluster(p, '2020_04_quote_all')
+    g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
+    vs = []
+    for i in range(6):
+        vs.extend(g.vs.select(lambda vertex : vertex['cluster'] == i))
+    g = subgraph(g, vs)
+    v_set = set(g.vs['name'])
+    paths = walk_dir('/home/narita/all_quote_2020_half1')
+    e_list = []
+    for path in paths:
+        print(path[-12:-10])
+        if path[-12:-10] == '06':
+            with open(path, 'r') as f:
+                while True:
+                    tweet = f.readline().strip()
+                    if not tweet:
+                        break
+                    tweet = json.loads(tweet)
+                    if tweet['user']['id_str'] in v_set and tweet['quoted_status']['user']['id_str'] in v_set:
+                        e_list.append(tweet['user']['id_str'] + ',' + tweet['quoted_status']['user']['id_str'])
+    c = collections.Counter(e_list)
+    del e_list
+    to_from_freq_list = []
+    weight_list = []
+    for k in c.most_common():
+        to_from_freq = k[0].split(',')
+        to_from_freq_list.append(to_from_freq)
+    e_weight = g.es['weight']
+    e_size = len(g.es['weight'])
+
+    g.add_edges(to_from_freq_list)
+    g.es['weight'] = e_weight + weight_list
+    g.es['type'] = ['rt' if i < e_size else 'quote' for i in range(len(g.es['weight']))]
+    save_gml(g, '06_test')
+    strength = cal_strength(g)
+    pal = igraph.drawing.colors.ClusterColoringPalette(1000)
+    visual_style = {}
+    #visual_style["vertex_size"] = 3
+    visual_style["vertex_size"] = [2 if i ==0 else int(i**0.1)+2 for i in strength]
+    visual_style["vertex_frame_width"] = 0
+    visual_style["edge_width"] = [int((x/2)**0.4) * 0.1 for x in g.es["weight"]]
+    visual_style["vertex_color"] = pal.get_many(g.vs['cluster'])
+    #visual_style["edge_width"] = 1
+    #visual_style["vertex_label"] = subg.vs["label"]
+    visual_style['edge_arrow_size'] = 1/150
+    visual_style['edge_arrow_width'] = 1/100
+    #visual_style['vertex_shape'] = 'hidden'
+    visual_style['layout'] = "lgr"
+    visual_style["bbox"] = (1200, 1200)
+    visual_style["edge_color"] = ['red' if x == 'quote' else 'gray' for x in g.es['type']]
+    #layout = g.layout_fruchterman_reingold(grid=True)
+    print('drawing')
+    plot(g, 'test.png', **visual_style)
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
     paths = []
