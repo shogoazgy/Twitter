@@ -278,7 +278,8 @@ if __name__ == "__main__":
     visual_style["edge_color"] = ['red' if x == 'quote' else 'gray' for x in g.es['type']]
     #layout = g.layout_fruchterman_reingold(grid=True)
     print('drawing')
-    plot(g, 'test.png', **visual_style)
+    igraph.plot(g, 'test.png', **visual_style)
+    print('finish')
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
     paths = []
