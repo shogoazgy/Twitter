@@ -225,12 +225,21 @@ if __name__ == "__main__":
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
-    summary(g)
-    print(len(g.es['weight']))
+    paths = walk_dir('/home/narita/covid_2020_06')
+    tweet_set = set()
+    for path in paths:
+        with open(path, 'r') as f:
+            while True:
+                tweet = f.readline().strip()
+                if not tweet:
+                    break
+                tweet = json.loads(tweet)
+                tweet_set.add(tweet['rewteeted_status']['id_str'])
     vs = []
     for i in range(6):
         vs.extend(g.vs.select(lambda vertex : vertex['cluster'] == i))
     g = subgraph(g, vs)
+    summary(g)
     v_set = set(g.vs['name'])
     paths = walk_dir('/home/narita/all_quote_2020_half1')
     e_list = []
@@ -244,7 +253,8 @@ if __name__ == "__main__":
                         break
                     tweet = json.loads(tweet)
                     if tweet['user']['id_str'] in v_set and tweet['quoted_status']['user']['id_str'] in v_set:
-                        e_list.append(tweet['user']['id_str'] + ',' + tweet['quoted_status']['user']['id_str'])
+                        if tweet['quoted_status']['id_str'] in tweet_set:
+                            e_list.append(tweet['user']['id_str'] + ',' + tweet['quoted_status']['user']['id_str'])
     c = collections.Counter(e_list)
     del e_list
     to_from_freq_list = []
