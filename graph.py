@@ -225,6 +225,8 @@ if __name__ == "__main__":
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
+    summary(g)
+    print(len(g.es['weight']))
     vs = []
     for i in range(6):
         vs.extend(g.vs.select(lambda vertex : vertex['cluster'] == i))
@@ -263,7 +265,7 @@ if __name__ == "__main__":
     print(len(g.es['type']))
     print(g.es['type'][5])
     print(g.es['type'][len(g.es['type']) - 5])
-    
+
 
     #g = Graph.Read_GML('06_test')
     strength = cal_strength(g)
