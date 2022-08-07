@@ -269,7 +269,7 @@ if __name__ == "__main__":
     g.add_edges(to_from_freq_list)
     g.es['weight'] = e_weight + weight_list
     g.es['type'] = ['rt' if i < e_size else 'quote' for i in range(len(g.es['weight']))]
-    save_gml(g, '06_test')
+    save_gml(g, '06_test_x')
     summary(g)
     print(len(g.es['weight']))
     print(len(g.es['type']))
