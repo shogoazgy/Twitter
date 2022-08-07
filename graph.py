@@ -234,7 +234,7 @@ if __name__ == "__main__":
                 if not tweet:
                     break
                 tweet = json.loads(tweet)
-                tweet_set.add(tweet['rewteeted_status']['id_str'])
+                tweet_set.add(tweet['retweeted_status']['id_str'])
     vs = []
     for i in range(6):
         vs.extend(g.vs.select(lambda vertex : vertex['cluster'] == i))
