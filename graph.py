@@ -273,7 +273,7 @@ if __name__ == "__main__":
     visual_style['edge_arrow_size'] = 1/150
     visual_style['edge_arrow_width'] = 1/100
     #visual_style['vertex_shape'] = 'hidden'
-    visual_style['layout'] = "lgr"
+    visual_style['layout'] = "lgl"
     visual_style["bbox"] = (1200, 1200)
     visual_style["edge_color"] = ['red' if x == 'quote' else 'gray' for x in g.es['type']]
     #layout = g.layout_fruchterman_reingold(grid=True)
