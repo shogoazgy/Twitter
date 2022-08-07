@@ -224,7 +224,6 @@ if __name__ == "__main__":
     #paths = walk_dir('/home/narita/all_quote_2020_half1')
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
-    """
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
     vs = []
     for i in range(6):
@@ -251,6 +250,7 @@ if __name__ == "__main__":
     for k in c.most_common():
         to_from_freq = k[0].split(',')
         to_from_freq_list.append(to_from_freq)
+        weight_list.append(k[1])
     e_weight = g.es['weight']
     e_size = len(g.es['weight'])
 
@@ -258,8 +258,14 @@ if __name__ == "__main__":
     g.es['weight'] = e_weight + weight_list
     g.es['type'] = ['rt' if i < e_size else 'quote' for i in range(len(g.es['weight']))]
     save_gml(g, '06_test')
-    """
-    g = Graph.Read_GML('06_test')
+    summary(g)
+    print(len(g.es['weight']))
+    print(len(g.es['type']))
+    print(g.es['type'][5])
+    print(g.es['type'][len(g.es['type']) - 5])
+    
+
+    #g = Graph.Read_GML('06_test')
     strength = cal_strength(g)
     pal = igraph.drawing.colors.ClusterColoringPalette(1000)
     visual_style = {}
