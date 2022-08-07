@@ -88,11 +88,12 @@ def id_to_screen_name(id, guest_token):
         screen_name = None
     return screen_name
 
-def cal_strength(g_list):
-    strength_list = []
-    for g in g_list:
-        strength_list.append(g.strength(g.vs, mode='in', loops=False, weights=g.es['weight']))
-    return strength_list
+def cal_strength(g):
+    #strength_list = []
+    #for g in g_list:
+    #    strength_list.append(g.strength(g.vs, mode='in', loops=False, weights=g.es['weight']))
+    #return strength_list
+    return g.strength(g.vs, mode='in', weights=g.es['weight'])
 
 def sort_max_print(subg, centrality, guest_token, len=10):
     cen_sorted = sorted(centrality, reverse=True)
@@ -223,6 +224,7 @@ if __name__ == "__main__":
     #paths = walk_dir('/home/narita/all_quote_2020_half1')
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
+    """
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
     vs = []
     for i in range(6):
@@ -256,6 +258,8 @@ if __name__ == "__main__":
     g.es['weight'] = e_weight + weight_list
     g.es['type'] = ['rt' if i < e_size else 'quote' for i in range(len(g.es['weight']))]
     save_gml(g, '06_test')
+    """
+    g = Graph.Read_GML('06_test')
     strength = cal_strength(g)
     pal = igraph.drawing.colors.ClusterColoringPalette(1000)
     visual_style = {}
