@@ -224,6 +224,7 @@ if __name__ == "__main__":
     #paths = walk_dir('/home/narita/all_quote_2020_half1')
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
+    """
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
     paths = walk_dir('/home/narita/covid_2020_06')
     tweet_set = set()
@@ -271,14 +272,16 @@ if __name__ == "__main__":
     g.es['weight'] = e_weight + weight_list
     g.es['type'] = ['rt' if i < e_size else 'quote' for i in range(len(g.es['weight']))]
     save_gml(g, '06_test_x')
+    """
+    g = Graph.Read_GML('06_test_x')
     summary(g)
     print(len(g.es['weight']))
     print(len(g.es['type']))
+    print(g.es['weight'][5])
+    print(g.es['weight'][len(g.es['type']) - 5])
     print(g.es['type'][5])
     print(g.es['type'][len(g.es['type']) - 5])
 
-
-    #g = Graph.Read_GML('06_test')
     strength = cal_strength(g)
     pal = igraph.drawing.colors.ClusterColoringPalette(1000)
     visual_style = {}
@@ -297,7 +300,7 @@ if __name__ == "__main__":
     visual_style["edge_color"] = ['red' if x == 'quote' else 'gray' for x in g.es['type']]
     #layout = g.layout_fruchterman_reingold(grid=True)
     print('drawing')
-    igraph.plot(g, 'test.png', **visual_style)
+    igraph.plot(g, '06_quote_rt.png', **visual_style)
     print('finish')
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
