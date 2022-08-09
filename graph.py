@@ -279,13 +279,13 @@ if __name__ == "__main__":
     for i in range(6):
         t_vs = g.vs.select(lambda vertex : vertex['cluster'] == i)
         vs.extend(t_vs)
-        sub = subgraph(g, t_vs)
-        strength = cal_strength(sub)
-        gt = get_guest_token()
-        sort_max_print(sub, strength, gt)
+        #sub = subgraph(g, t_vs)
+        #strength = cal_strength(sub)
+        #gt = get_guest_token()
+        #sort_max_print(sub, strength, gt)
     g = subgraph(g, vs)
     summary(g)
-    p = partition = la.find_partition(g, la.RBConfigurationVertexPartition, weights=g.es['weight'], n_iterations=-1, resolution_parameter=0, initial_membership=g.vs['cluster'])
+    p = partition = la.find_partition(g, la.RBConfigurationVertexPartition, weights=g.es['weight'], n_iterations=-1, resolution_parameter=0, initial_membership=[int(i) for i in g.vs['cluster']])
     print(p.quality())
     sys.stdout.flush()
 
