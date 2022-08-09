@@ -273,14 +273,21 @@ if __name__ == "__main__":
     g.es['type'] = ['rt' if i < e_size else 'quote' for i in range(len(g.es['weight']))]
     save_gml(g, '06_test_x')
     """
-    g = Graph.Read_GML('06_test_x')
+    g = Graph.Read_GML('/home/narita/Twitter/2020_04_quote_all')
     summary(g)
-    print(len(g.es['weight']))
-    print(len(g.es['type']))
-    print(g.es['weight'][5])
-    print(g.es['weight'][len(g.es['type']) - 5])
-    print(g.es['type'][5])
-    print(g.es['type'][len(g.es['type']) - 5])
+    vs = []
+    for i in range(6):
+        t_vs = g.vs.select(lambda vertex : vertex['cluster'] == i)
+        vs.extend(t_vs)
+        sub = subgraph(g, t_vs)
+        strength = cal_strength(sub)
+        gt = get_guest_token()
+        sort_max_print(sub, strength, gt)
+    g = subgraph(g, vs)
+    summary(g)
+    p = partition = la.find_partition(g, la.RBConfigurationVertexPartition, weights=g.es['weight'], n_iterations=-1, resolution_parameter=0, initial_membership=g.vs['cluster'])
+    print(p.quality())
+    sys.stdout.flush()
 
     strength = cal_strength(g)
     pal = igraph.drawing.colors.ClusterColoringPalette(1000)
@@ -297,10 +304,10 @@ if __name__ == "__main__":
     #visual_style['vertex_shape'] = 'hidden'
     visual_style['layout'] = "drl"
     visual_style["bbox"] = (1200, 1200)
-    visual_style["edge_color"] = [pal[7] if x == 'quote' else 'gray' for x in g.es['type']]
+    #visual_style["edge_color"] = [pal[7] if x == 'quote' else 'gray' for x in g.es['type']]
     #layout = g.layout_fruchterman_reingold(grid=True)
     print('drawing')
-    igraph.plot(g, '06_quote_rt_color.png', **visual_style)
+    igraph.plot(g, 'all_quote_04_6.png', **visual_style)
     print('finish')
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
