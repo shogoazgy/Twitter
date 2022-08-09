@@ -297,10 +297,10 @@ if __name__ == "__main__":
     #visual_style['vertex_shape'] = 'hidden'
     visual_style['layout'] = "drl"
     visual_style["bbox"] = (1200, 1200)
-    visual_style["edge_color"] = ['red' if x == 'quote' else 'gray' for x in g.es['type']]
+    visual_style["edge_color"] = [pal[7] if x == 'quote' else 'gray' for x in g.es['type']]
     #layout = g.layout_fruchterman_reingold(grid=True)
     print('drawing')
-    igraph.plot(g, '06_quote_rt.png', **visual_style)
+    igraph.plot(g, '06_quote_rt_color.png', **visual_style)
     print('finish')
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
