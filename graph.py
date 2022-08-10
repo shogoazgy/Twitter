@@ -107,7 +107,7 @@ def build_network(paths, save_filename, mode='quoted'):
     for path in paths:
         #print(path)
         print(path[-12:-10])
-        if path[-12:-10] == '04':
+        if path[-12:-10] == '06':
             with open(path, 'r') as f:
                 while True:
                     tweet = f.readline().strip()
@@ -224,7 +224,9 @@ if __name__ == "__main__":
     #paths = walk_dir('/home/narita/all_quote_2020_half1')
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
+    paths = walk_dir('/home/narita/Twitter/graphs/RT')
     """
+    # RTでコロナが含まれている場合の引用RTグラフの構築
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
     paths = walk_dir('/home/narita/covid_2020_06')
     tweet_set = set()
@@ -273,10 +275,17 @@ if __name__ == "__main__":
     g.es['type'] = ['rt' if i < e_size else 'quote' for i in range(len(g.es['weight']))]
     save_gml(g, '06_test_x')
     """
-    g = Graph.Read_GML('/home/narita/Twitter/2020_04_quote_all')
+
+    g = Graph.Read_GML('/home/narita/Twitter/06_test_x')
+    print('2020_06_test_x')
     summary(g)
+    print('\n')
+    print('クラスタの数')
+    print(len(set(g.vs['clutster'])))
+    print('\n')
+    sys.stdout.flush()
     vs = []
-    for i in range(6):
+    for i in range(5):
         t_vs = g.vs.select(lambda vertex : vertex['cluster'] == i)
         vs.extend(t_vs)
         #sub = subgraph(g, t_vs)
@@ -284,8 +293,13 @@ if __name__ == "__main__":
         #gt = get_guest_token()
         #sort_max_print(sub, strength, gt)
     g = subgraph(g, vs)
+    print('06_test_x クラスタ数5')
     summary(g)
-    p = partition = la.find_partition(g, la.RBConfigurationVertexPartition, weights=g.es['weight'], n_iterations=-1, resolution_parameter=0, initial_membership=[int(i) for i in g.vs['cluster']])
+    print('\n')
+    print('クラスタの数')
+    print(len(set(g.vs['clutster'])))
+    print('\n')
+    p = la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
     print(p.quality())
     sys.stdout.flush()
 
@@ -304,10 +318,9 @@ if __name__ == "__main__":
     #visual_style['vertex_shape'] = 'hidden'
     visual_style['layout'] = "drl"
     visual_style["bbox"] = (1200, 1200)
-    #visual_style["edge_color"] = [pal[7] if x == 'quote' else 'gray' for x in g.es['type']]
-    #layout = g.layout_fruchterman_reingold(grid=True)
+    visual_style["edge_color"] = [pal[5] if x == 'quote' else 'gray' for x in g.es['type']]
     print('drawing')
-    igraph.plot(g, 'all_quote_04_6.png', **visual_style)
+    igraph.plot(g, '2020_06_quote_rt_color_5.png', **visual_style)
     print('finish')
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
@@ -323,79 +336,4 @@ if __name__ == "__main__":
         reply_result[info] = []
     #quoted_result['community edge ratio (RT network)'] = []
     #reply_result['community edge ratio (RT network)'] = []
-    
-    paths = walk_dir('/home/narita/Twitter/graphs/RT')
-    for path in paths:
-        if path[-1] == 's':
-            g = Graph.Read_GML(path)
-            p = la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
-            summary(g)
-            rt_result['term'].append('2020_' + path[-12:-10])
-            rt_result['node'].append(len(g.vs))
-            rt_result['edge'].append(len(g.es))
-            rt_result['RT'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
-            rt_result['modurality'].append(p.quality())
-            sum_in = 0
-            sum_all = 0
-            for edge in g.es:
-                sum_all += edge['weight']
-                if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
-                    sum_in += edge['weight']
-            rt_result['community edge ratio'].append(sum_in / sum_all)
-    df_rt = pd.DataFrame(rt_result)
-    df_rt = df_rt.set_index('term')
-    df_rt.to_csv("rt.csv", encoding="shift_jis")
-    #paths = walk_dir('/home/narita/Twitter/graphs/reply')
-    
-    for path in all_paths:
-        if path[-12:-10] != pre_month:
-            if paths != []:
-                g = build_network(paths, save_filename='/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted', mode='quoted')
-                print('quoted clustering')
-                p = clustering(g)
-                print('quoted clustering end')
-                g.vs['cluster'] = p.membership
-                save_gml(g, '/home/narita/Twitter/graphs/quoted/2020_' + pre_month + '_quoted_clusters')
-                summary(g)
-                quoted_result['term'].append('2020_' + pre_month)
-                quoted_result['node'].append(len(g.vs))
-                quoted_result['edge'].append(len(g.es))
-                quoted_result['sum edge'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
-                quoted_result['modurality'].append(p.quality())
-                sum_in = 0
-                sum_all = 0
-                for edge in g.es:
-                    sum_all += edge['weight']
-                    if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
-                        sum_in += edge['weight']
-                quoted_result['community edge ratio'].append(sum_in / sum_all)
-                g = build_network(paths, save_filename='/home/narita/Twitter/graphs/reply/2020_' + pre_month + '_reply', mode='reply')
-                summary(g)
-                print('reply clustering')
-                p = clustering(g)
-                print('reply clustering end')
-                g.vs['cluster'] = p.membership
-                save_gml(g, '/home/narita/Twitter/graphs/reply/2020_' + pre_month + '_reply_clusters')
-                reply_result['term'].append('2020_' + pre_month)
-                reply_result['node'].append(len(g.vs))
-                reply_result['edge'].append(len(g.es))
-                reply_result['sum edge'].append(sum(g.strength(g.vs, weights=g.es['weight'], mode='out')))
-                reply_result['modurality'].append(p.quality())
-                sum_in = 0
-                sum_all = 0
-                for edge in g.es:
-                    sum_all += edge['weight']
-                    if g.vs[edge.target]['cluster'] == g.vs[edge.source]['cluster']:
-                        sum_in += edge['weight']
-                reply_result['community edge ratio'].append(sum_in / sum_all)
-                print(pre_month)
-                paths = []
-        pre_month = path[-12:-10]
-        paths.append(path)
-    df_quoted = pd.DataFrame(quoted_result)
-    df_quoted = df_quoted.set_index('term')
-    df_quoted.to_csv("quoted.csv", encoding="shift_jis")
-    df_reply = pd.DataFrame(reply_result)
-    df_reply = df_reply.set_index('term')
-    df_reply.to_csv("reply.csv", encoding="shift_jis")
     """
