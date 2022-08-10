@@ -281,7 +281,7 @@ if __name__ == "__main__":
     summary(g)
     print('\n')
     print('クラスタの数')
-    print(len(set(g.vs['clutster'])))
+    print(len(set(g.vs['cluster'])))
     print('\n')
     sys.stdout.flush()
     vs = []
@@ -297,7 +297,7 @@ if __name__ == "__main__":
     summary(g)
     print('\n')
     print('クラスタの数')
-    print(len(set(g.vs['clutster'])))
+    print(len(set(g.vs['cluster'])))
     print('\n')
     p = la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
     print(p.quality())
