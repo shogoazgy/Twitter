@@ -284,21 +284,6 @@ if __name__ == "__main__":
     print(len(set(g.vs['cluster'])))
     print('\n')
     sys.stdout.flush()
-    vs = []
-    for i in range(5):
-        t_vs = g.vs.select(lambda vertex : vertex['cluster'] == i)
-        vs.extend(t_vs)
-        #sub = subgraph(g, t_vs)
-        #strength = cal_strength(sub)
-        #gt = get_guest_token()
-        #sort_max_print(sub, strength, gt)
-    g = subgraph(g, vs)
-    print('06_test_x クラスタ数5')
-    summary(g)
-    print('\n')
-    print('クラスタの数')
-    print(len(set(g.vs['cluster'])))
-    print('\n')
     p = la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
     print(p.quality())
     sys.stdout.flush()
@@ -311,6 +296,7 @@ if __name__ == "__main__":
     visual_style["vertex_frame_width"] = 0
     visual_style["edge_width"] = [int((x/2)**0.4) * 0.1 for x in g.es["weight"]]
     visual_style["vertex_color"] = pal.get_many(g.vs['cluster'])
+    visual_style['vertex_color'] = [pal[7] if x == (1.0, 0.0, 0.0, 1.0) else x for x in visual_style['vertex_color']]
     #visual_style["edge_width"] = 1
     #visual_style["vertex_label"] = subg.vs["label"]
     visual_style['edge_arrow_size'] = 1/150
@@ -318,7 +304,7 @@ if __name__ == "__main__":
     #visual_style['vertex_shape'] = 'hidden'
     visual_style['layout'] = "drl"
     visual_style["bbox"] = (1200, 1200)
-    visual_style["edge_color"] = [pal[5] if x == 'quote' else 'gray' for x in g.es['type']]
+    visual_style["edge_color"] = ['red' if x == 'quote' else 'gray' for x in g.es['type']]
     print('drawing')
     igraph.plot(g, '2020_06_quote_rt_color_5.png', **visual_style)
     print('finish')
