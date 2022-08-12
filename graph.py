@@ -290,13 +290,14 @@ if __name__ == "__main__":
 
     strength = cal_strength(g)
     pal = igraph.drawing.colors.ClusterColoringPalette(1000)
+    pal = pal[1:]
     visual_style = {}
     #visual_style["vertex_size"] = 3
     visual_style["vertex_size"] = [2 if i ==0 else int(i**0.1)+2 for i in strength]
     visual_style["vertex_frame_width"] = 0
     visual_style["edge_width"] = [int((x/2)**0.4) * 0.1 for x in g.es["weight"]]
     visual_style["vertex_color"] = pal.get_many(g.vs['cluster'])
-    visual_style['vertex_color'] = [pal[7] if x == (1.0, 0.0, 0.0, 1.0) else x for x in visual_style['vertex_color']]
+    #visual_style['vertex_color'] = [pal[7] if x == (1.0, 0.0, 0.0, 1.0) else x for x in visual_style['vertex_color']]
     #visual_style["edge_width"] = 1
     #visual_style["vertex_label"] = subg.vs["label"]
     visual_style['edge_arrow_size'] = 1/150
@@ -306,7 +307,7 @@ if __name__ == "__main__":
     visual_style["bbox"] = (1200, 1200)
     visual_style["edge_color"] = ['red' if x == 'quote' else 'gray' for x in g.es['type']]
     print('drawing')
-    igraph.plot(g, '2020_06_quote_rt_color_5.png', **visual_style)
+    igraph.plot(g, '2020_06_quote_rt_color_6.png', **visual_style)
     print('finish')
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
