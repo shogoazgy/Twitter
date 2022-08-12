@@ -283,7 +283,7 @@ if __name__ == "__main__":
 
     strength = cal_strength(g)
     pal = igraph.drawing.colors.ClusterColoringPalette(1000)
-    pal = pal[1:]
+    #pal = pal[1:]
     visual_style = {}
     #visual_style["vertex_size"] = 3
     visual_style["vertex_size"] = [2 if i ==0 else int(i**0.1)+2 for i in strength]
