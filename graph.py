@@ -279,13 +279,6 @@ if __name__ == "__main__":
     g = Graph.Read_GML('/home/narita/Twitter/06_test_x')
     print('2020_06_test_x')
     summary(g)
-    print('\n')
-    print('クラスタの数')
-    print(len(set(g.vs['cluster'])))
-    print('\n')
-    sys.stdout.flush()
-    p = la.ModularityVertexPartition(g,weights=g.es['weight'], initial_membership=[int(i) for i in g.vs['cluster']])
-    print(p.quality())
     sys.stdout.flush()
 
     strength = cal_strength(g)
@@ -297,7 +290,11 @@ if __name__ == "__main__":
     visual_style["vertex_frame_width"] = 0
     visual_style["edge_width"] = [int((x/2)**0.4) * 0.1 for x in g.es["weight"]]
     visual_style["vertex_color"] = pal.get_many(g.vs['cluster'])
-    #visual_style['vertex_color'] = [pal[7] if x == (1.0, 0.0, 0.0, 1.0) else x for x in visual_style['vertex_color']]
+    visual_style['vertex_color'] = [pal[7] if x == (1.0, 0.0, 0.0, 1.0) else x for x in visual_style['vertex_color']]
+    print(set(visual_style['vertex_color']))
+    
+    sys.stdout.flush()
+
     #visual_style["edge_width"] = 1
     #visual_style["vertex_label"] = subg.vs["label"]
     visual_style['edge_arrow_size'] = 1/150
