@@ -292,7 +292,7 @@ if __name__ == "__main__":
     visual_style["edge_width"] = [int((x/2)**0.4) * 0.1 for x in g.es["weight"]]
     visual_style["vertex_color"] = pal.get_many(g.vs['cluster'])
     print(set(visual_style['vertex_color']))
-    visual_style['vertex_color'] = [pal[7] if x == (1.0, 0.0, 0.0, 1.0) else x for x in visual_style['vertex_color']]
+    visual_style['vertex_color'] = [pal[6] if x == (1.0, 0.0, 0.0, 1.0) else x for x in visual_style['vertex_color']]
     print(set(visual_style['vertex_color']))
     
     sys.stdout.flush()
