@@ -218,7 +218,7 @@ def extract_image_urls(tweet):
     elif 'extended_entities' in tweet['retweeted_status'].keys():
         pass
 
-def extact_random(paths, max_count=1000, prob=0.01):
+def extact_random(paths, max_count=1000, prob=0.001):
     quoted = []
     quote = []
     quote_ids = []
@@ -255,7 +255,7 @@ if __name__ == "__main__":
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
     #paths = walk_dir('/home/narita/Twitter/graphs/RT')
-    df = extact_random(paths, max_count=5000)
+    df = extact_random(paths, max_count=10000)
     df['label'] = ['' for _ in range(len(df['quote']))]
     df.to_csv('/home/narita/Twitter/quoted_annotate.csv')
 
