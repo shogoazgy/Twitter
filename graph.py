@@ -243,7 +243,7 @@ def extact_random(paths, max_count=1000, prob=0.01):
                             count += 1
                             print(count)
                         except:
-                            pass
+                            print('e')
     return pd.DataFrame([quote_ids, quoted, quote], columns=['quote_id_str', 'quoted', 'quote'])
 
 if __name__ == "__main__":
