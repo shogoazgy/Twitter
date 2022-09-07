@@ -236,11 +236,14 @@ def extact_random(paths, max_count=1000, prob=0.01):
             if 'quoted_status' in t.keys():
                 if random.random() < prob:
                     if t['text'][:2] != 'RT':
-                        quoted.append(t['quoted_status']['text'])
-                        quote.append(t['text'])
-                        quote_ids.append(t['id_str'])
-                        count += 1
-                        print(count)
+                        try:
+                            quoted.append(t['quoted_status']['text'])
+                            quote.append(t['text'])
+                            quote_ids.append(t['id_str'])
+                            count += 1
+                            print(count)
+                        except:
+                            pass
     return pd.DataFrame([quote_ids, quoted, quote], columns=['quote_id_str', 'quoted', 'quote'])
 
 if __name__ == "__main__":
