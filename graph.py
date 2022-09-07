@@ -227,8 +227,8 @@ def extact_random(paths, max_count=1000, prob=0.01):
         if count > max_count:
             break
         with open(path, 'r') as f:
-            t = f.readline().strip()
             while True:
+                t = f.readline().strip()
                 if not t:
                     break
                 if count > max_count:
