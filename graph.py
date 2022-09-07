@@ -245,7 +245,7 @@ def extact_random(paths, max_count=1000, prob=0.01):
                                 print(count)
                             except:
                                 print('e')
-    return pd.DataFrame([quote_ids, quoted, quote], columns=['quote_id_str', 'quoted', 'quote'])
+    return pd.DataFrame({'quote_id_str': quote_ids, 'quoted': quoted, 'quote': quote})
 
 if __name__ == "__main__":
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
