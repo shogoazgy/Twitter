@@ -250,7 +250,8 @@ def extact_random(paths, max_count=1000, prob=0.01):
 if __name__ == "__main__":
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
-    paths = walk_dir('/home/narita/all_quote_2020_half1')
+    #paths = walk_dir('/home/narita/all_quote_2020_half1')
+    paths = walk_dir('/home/narita/2020-ex-rt-jp')
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
     #paths = walk_dir('/home/narita/Twitter/graphs/RT')
