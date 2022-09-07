@@ -1,4 +1,5 @@
 
+from email.quoprimime import quote
 import pandas as pd
 import numpy as np
 from igraph import *
@@ -13,6 +14,7 @@ import json
 import sys
 import subprocess
 import pickle
+import random
 #from sklearn.linear_model import LinearRegression
 
 def count_lines(path):
@@ -216,15 +218,41 @@ def extract_image_urls(tweet):
     elif 'extended_entities' in tweet['retweeted_status'].keys():
         pass
 
-
+def extact_random(paths, max_count=1000, prob=0.01):
+    quoted = []
+    quote = []
+    quote_ids = []
+    count = 0
+    for path in paths:
+        if count > max_count:
+            break
+        with open(path, 'r') as f:
+            t = f.readline().strip()
+            if not t:
+                break
+            if count > max_count:
+                break
+            if random.random() < prob:
+                t = json.loads(t)
+                if t['text'][:2] != 'RT':
+                    quoted.append(t['quoted_status']['text'])
+                    quote.append(t['text'])
+                    quote_ids.append(t['id_str'])
+                    count += 1
+    return pd.DataFrame([quote_ids, quoted, quote], columns=['quote_id_str', 'quoted', 'quote'])
 
 if __name__ == "__main__":
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
-    #paths = walk_dir('/home/narita/all_quote_2020_half1')
+    paths = walk_dir('/home/narita/all_quote_2020_half1')
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
-    paths = walk_dir('/home/narita/Twitter/graphs/RT')
+    #paths = walk_dir('/home/narita/Twitter/graphs/RT')
+    df = extact_random(paths, max_count=5000)
+    df['label'] = ['' for _ in range(len(df['quote']))]
+    df.to_csv('/home/narita/Twitter/quoted_annotate.csv')
+
+
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
@@ -275,7 +303,7 @@ if __name__ == "__main__":
     g.es['type'] = ['rt' if i < e_size else 'quote' for i in range(len(g.es['weight']))]
     save_gml(g, '06_test_x')
     """
-
+    """
     g = Graph.Read_GML('/home/narita/Twitter/06_test_x')
     print('2020_06_test_x')
     summary(g)
@@ -308,6 +336,7 @@ if __name__ == "__main__":
     print('drawing')
     igraph.plot(g, '2020_06_quote_rt_color_6.png', **visual_style)
     print('finish')
+    """
     """
     all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
     paths = []
