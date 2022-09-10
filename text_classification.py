@@ -138,7 +138,7 @@ loss_checkpoint = pl.callbacks.ModelCheckpoint(
 
 trainer = pl.Trainer(
     #gpus=1,
-    accelerator=['cpu'],
+    accelerator='cpu',
     max_epochs=10,
     callbacks=[loss_checkpoint]
 )
