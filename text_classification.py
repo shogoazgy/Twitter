@@ -19,11 +19,11 @@ from sklearn.metrics import roc_auc_score, precision_recall_curve, roc_curve, av
 from lightgbm import LGBMClassifier
 from transformers import BertModel, BertTokenizer, BertForSequenceClassification
 from torch.utils.data import DataLoader
-from fastprogress.fastprogress import  progress_bar
+from fastprogress.fastprogress import progress_bar
 from sklearn.decomposition import PCA
 
-df_train = pd.read_csv('/home/narita/Twitter/sigtrain.csv')
-df_test = pd.read_csv('/home/narita/Twitter/sigtest.csv')
+df_train = pd.read_csv('/home/narita/Twitter/sig/train.csv')
+df_test = pd.read_csv('/home/narita/Twitter/sig/test.csv')
 df_all = pd.concat([df_train, df_test], sort=False).reset_index(drop=True)
 
 len_train = len(df_train)
