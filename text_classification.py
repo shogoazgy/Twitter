@@ -22,6 +22,7 @@ from torch.utils.data import DataLoader
 from fastprogress.fastprogress import progress_bar
 from sklearn.decomposition import PCA
 
+
 df_train = pd.read_csv('/home/narita/Twitter/sig/train.csv')
 df_test = pd.read_csv('/home/narita/Twitter/sig/test.csv')
 df_all = pd.concat([df_train, df_test], sort=False).reset_index(drop=True)
@@ -90,7 +91,7 @@ df_all['words_size'] = df_all['html_content'].apply(words_size)
 #目標と単語数の比率
 df_all['goal_words_rate'] = [df_all['goal_min'][i] / df_all['words_size'][i] for i in range(len(df_all['state']))]
 
-
+"""
 # 文書分類モデル作成
 MODEL = 'bert-base-cased'
 tokenizer = BertTokenizer.from_pretrained(MODEL)
@@ -196,3 +197,183 @@ model = BertForSequenceClassification_pl.load_from_checkpoint(
 FINE_TUNED_MODEL_PATH = '/home/narita/Twitter/sig/text_fine_tuned_model_cased_512'
 
 model.bert_sc.save_pretrained(FINE_TUNED_MODEL_PATH)
+"""
+tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+FINE_TUNED_MODEL_PATH = '/home/narita/Twitter/sig/text_fine_tuned_model_cased_512'
+model = BertModel.from_pretrained(FINE_TUNED_MODEL_PATH, num_labels=1)
+model.eval()
+
+class BertDataset(nn.Module):
+    def __init__(self, df, tokenizer, max_len=512):
+        self.excerpt = df.to_numpy()
+        self.max_len = max_len
+        self.tokenizer = tokenizer
+    
+    def __getitem__(self,idx):
+        encode = self.tokenizer.encode_plus(
+            self.excerpt[idx],
+            return_tensors='pt',
+            max_length=self.max_len,
+            padding='max_length',
+            truncation=True
+        )
+        return encode
+    
+    def __len__(self):
+        return len(self.excerpt)
+
+def get_embeddings(df, path, plot_losses=True, verbose=True):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"{device} is used")
+            
+    MODEL_PATH = path
+    model = BertModel.from_pretrained(MODEL_PATH, num_labels=1)
+    #model.to(device)
+    model.eval()
+    
+    ds = BertDataset(df, tokenizer, config['max_len'])
+    dl = DataLoader(
+        ds,
+        batch_size=config["batch_size"],
+        shuffle=False,
+        num_workers = 4,
+        pin_memory=True,
+        drop_last=False
+    )
+
+    embeddings = list()
+    with torch.no_grad():
+        for i, inputs in progress_bar(list(enumerate(dl))):
+            inputs = {key:val.reshape(val.shape[0], -1).to(device) for key, val in inputs.items()}
+            outputs = model(**inputs)
+            outputs = outputs[0][:, 0].detach().cpu().numpy()
+            embeddings.extend(outputs)
+            
+    return np.array(embeddings)
+
+def seed_everything(seed=42):
+    random.seed(seed)
+    os.environ['PYTHONASSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = True
+
+config = {
+    'batch_size': 128,
+    'max_len': 512,
+    'seed': 42,
+}
+seed_everything(seed=config['seed'])
+
+def to_text(x):
+    return x.text.replace('\n', ' ')
+d_tr = df_all['html_content'].apply(to_text)[:len_train]
+d_te = df_all['html_content'].apply(to_text)[len_train:]
+
+train_embeddings =  get_embeddings(d_tr, FINE_TUNED_MODEL_PATH)
+test_embeddings = get_embeddings(d_te, FINE_TUNED_MODEL_PATH)
+
+import pickle
+with open('/home/narita/Twitter/sig/embeddings_cased_512.pkl', 'wb') as w:
+    pickle.dump(np.concatenate([train_embeddings, test_embeddings]), w)
+
+x = np.concatenate([train_embeddings, test_embeddings]).tolist()
+
+for i in range(len(x[0])):
+    df_all['x' + str(i)] = [q[i] for q in x]
+
+df_all['goal_min'] = np.log(df_all['goal_min'])
+df_all['goal_max'] = np.log(df_all['goal_max'])
+
+df = df_all.drop(columns=['id', 'html_content', 'goal', 'goal_max'])
+data = df[:len_train].drop(["state"], axis=1)
+test = df[len_train:].drop(["state"], axis=1)
+y = df[:len_train]["state"]
+folds = KFold(n_splits=5, shuffle=True, random_state=546789)
+skf = StratifiedKFold(n_splits=5,
+                      shuffle=True,
+                      random_state=0)
+
+def train_model(data_, test_, y_, folds_, seed=42):
+
+    oof_preds = np.zeros(data_.shape[0])
+    sub_preds = np.zeros(test_.shape[0])
+    oof_preds_x = np.zeros(data_.shape[0])
+    
+    feature_importance_df = pd.DataFrame()
+    
+    feats = [f for f in data_.columns]
+    
+    #for n_fold, (trn_idx, val_idx) in enumerate(folds_.split(data_)):
+    for n_fold, (trn_idx, val_idx) in enumerate(folds_.split(data_, y_)):
+        trn_x, trn_y = data_[feats].iloc[trn_idx], y_.iloc[trn_idx]
+        val_x, val_y = data_[feats].iloc[val_idx], y_.iloc[val_idx]
+        
+        clf = LGBMClassifier(
+            n_estimators=4000,
+            learning_rate=0.03,
+            num_leaves=3,
+            colsample_bytree=.8,
+            subsample=.9,
+            max_depth=7,
+            reg_alpha=.1,
+            reg_lambda=.1,
+            min_split_gain=.01,
+            min_child_weight=2,
+            silent=-1,
+            verbose=-1,
+            random_seed=seed,
+        )
+        """
+        clf = LGBMClassifier(
+            n_estimators=4000,
+            #learning_rate=0.0995,
+            learning_rate=0.19,
+            num_leaves=170,
+            colsample_bytree=0.6967,
+            subsample=0.526563,
+            max_depth=7,
+            #reg_alpha=0.0008114799,
+            reg_alpha=0.00000056,
+            #reg_lambda=7.23305,
+            reg_lambda=0.002977,
+            min_split_gain=.01,
+            min_child_weight=4,
+            silent=-1,
+            verbose=-1,
+            random_seed=seed,
+        )
+        """
+        
+        clf.fit(trn_x, trn_y, 
+                eval_set= [(trn_x, trn_y), (val_x, val_y)], 
+                eval_metric='f1', verbose=100, early_stopping_rounds=100, categorical_feature=cat_cols)  #30)
+        
+        oof_preds[val_idx] = clf.predict_proba(val_x, num_iteration=clf.best_iteration_)[:, 1]
+        oof_preds_x[val_idx] = clf.predict(val_x, num_iteration=clf.best_iteration_)[:]
+        sub_preds += clf.predict_proba(test_[feats], num_iteration=clf.best_iteration_)[:, 1] / folds_.n_splits
+        
+        fold_importance_df = pd.DataFrame()
+        fold_importance_df["feature"] = feats
+        fold_importance_df["importance"] = clf.feature_importances_
+        fold_importance_df["fold"] = n_fold + 1
+        feature_importance_df = pd.concat([feature_importance_df, fold_importance_df], axis=0)
+        
+        #print('Fold %2d AUC : %.6f' % (n_fold + 1, roc_auc_score(val_y, oof_preds[val_idx])))
+        print('Fold %2d F1 : %.6f' % (n_fold + 1, f1_score(val_y, oof_preds_x[val_idx])))
+        ans = clf.predict(test_)
+        del clf, trn_x, trn_y, val_x, val_y
+        gc.collect()
+        
+    #print('Full AUC score %.6f' % roc_auc_score(y, oof_preds)) 
+    print('Full F1 score %.6f' % f1_score(y, oof_preds_x)) 
+    
+
+    return oof_preds, sub_preds, feature_importance_df, ans
+
+oof_preds, test_preds, importances, ans = train_model(data, test, y, skf)
+
+print(importances[0:20])
