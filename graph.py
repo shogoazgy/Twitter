@@ -265,6 +265,19 @@ if __name__ == "__main__":
     p = clustering(g, resolution_parameter=0.2)
     for i in range(10):
         print(len(p[i]))
+    p = clustering(g, resolution_parameter=0.25)
+    for i in range(10):
+        print(len(p[i]))
+    p = clustering(g, resolution_parameter=0.3)
+    for i in range(10):
+        print(len(p[i]))
+    p = clustering(g, resolution_parameter=0.35)
+    for i in range(10):
+        print(len(p[i]))
+    p = clustering(g, resolution_parameter=0.4)
+    for i in range(10):
+        print(len(p[i]))
+    
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
