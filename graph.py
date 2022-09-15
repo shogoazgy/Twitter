@@ -257,12 +257,11 @@ if __name__ == "__main__":
     #df = extact_random(paths, max_count=10000)
     #df['label'] = ['' for _ in range(len(df['quote']))]
     #df.to_csv('/home/narita/Twitter/quoted_annotate.csv')
-    g = build_network(paths, save_filename='immi_rt_graph', mode='retweet')
-    p = clustering(g)
-    g.vs['cluster'] = p.membership
+    g = Graph.Read_GML('/home/narita/Twitter/immi_rt_graph_clusters')
     summary(g)
-    print(p.quality())
-    save_gml(g, 'immi_rt_graph_clusters')
+    c = collections.Counter(g.vs['cluster'])
+    for x in c.most_common(10):
+        print(x)
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
