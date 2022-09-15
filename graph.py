@@ -246,37 +246,24 @@ def extact_random(paths, max_count=1000, prob=0.001):
                                 print('e')
     return pd.DataFrame({'quote_id_str': quote_ids, 'quoted': quoted, 'quote': quote})
 
+def exped(paths):
+    count = 0
+    for path in paths:
+        print(path)
+        with open(path, 'r') as f:
+            while True:
+                tweet = f.readline().strip()
+                if not tweet:
+                    break
+                tweet = json.loads(tweet)
+                if 'quoted_status' in tweet.keys():
+                    count += 1
+    print(count)
+
+
 if __name__ == "__main__":
-    #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
-    #g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
     paths = walk_dir('/home/narita/immigration')
-    #paths = walk_dir('/home/narita/2020-ex-rt-jp')
-    #g = build_network(paths, '2020_04_quote_all')
-    #summary(g)
-    #paths = walk_dir('/home/narita/Twitter/graphs/RT')
-    #df = extact_random(paths, max_count=10000)
-    #df['label'] = ['' for _ in range(len(df['quote']))]
-    #df.to_csv('/home/narita/Twitter/quoted_annotate.csv')
-    g = Graph.Read_GML('/home/narita/Twitter/immi_rt_graph_clusters')
-    summary(g)
-    c = collections.Counter(g.vs['cluster'])
-    for x in c.most_common(10):
-        print(x)
-    p = clustering(g, resolution_parameter=0.2)
-    for i in range(10):
-        print(len(p[i]))
-    p = clustering(g, resolution_parameter=0.25)
-    for i in range(10):
-        print(len(p[i]))
-    p = clustering(g, resolution_parameter=0.3)
-    for i in range(10):
-        print(len(p[i]))
-    p = clustering(g, resolution_parameter=0.35)
-    for i in range(10):
-        print(len(p[i]))
-    p = clustering(g, resolution_parameter=0.4)
-    for i in range(10):
-        print(len(p[i]))
+    
     
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
