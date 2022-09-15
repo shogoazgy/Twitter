@@ -257,6 +257,7 @@ def exped(paths):
                     break
                 tweet = json.loads(tweet)
                 if 'quoted_status' in tweet.keys():
+                    tweet['text'][:2] != 'RT':
                     count += 1
     print(count)
 
