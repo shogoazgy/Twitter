@@ -62,10 +62,10 @@ for col in cat_cols:
     df_all[col] = le.fit_transform(df_all[col].values)
 
 #htmlをbs4で変換
-from bs4 import BeautifulSoup
-def html_parse(x):
-    return BeautifulSoup(x, "html.parser")
-df_all['html_content'] = df_all['html_content'].apply(html_parse)
+#from bs4 import BeautifulSoup
+#def html_parse(x):
+#    return BeautifulSoup(x, "html.parser")
+#df_all['html_content'] = df_all['html_content'].apply(html_parse)
 
 #タグ全部の個数
 #tags = ['html', 'head', 'body', 'title', 'isindex', 'base', 'meta', 'link', 'script', 'hn', 'hr', 'br', 'p', 'center', 'div', 'pre', 'blockquote', 'address', 'font', 'basefont', 'i', 'tt', 'b', 'u', 'strike', 'big', 'small', 'sub', 'sup', 'em', 'strong', 'code', 'samp', 'kbd', 'var', 'cite', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'table', 'tr', 'th', 'td', 'caption', 'a', 'img', 'map', 'area', 'form', 'input', 'select', 'option', 'textarea', 'applet', 'param', 'frameset', 'frame', 'noframes']
@@ -91,7 +91,6 @@ df_all['words_size'] = df_all['html_content'].apply(words_size)
 #目標と単語数の比率
 df_all['goal_words_rate'] = [df_all['goal_min'][i] / df_all['words_size'][i] for i in range(len(df_all['state']))]
 
-"""
 # 文書分類モデル作成
 MODEL = 'bert-base-cased'
 tokenizer = BertTokenizer.from_pretrained(MODEL)
@@ -173,7 +172,8 @@ skf = StratifiedKFold(n_splits=5,
 def to_text(x):
   return x.text.replace('\n', ' ')
 
-d = df_all['html_content'].apply(to_text)[:len_train]
+#d = df_all['html_content'].apply(to_text)[:len_train]
+d = df_all['html_content'][:len_train]
 y = df_all['state'][:len_train]
 for n_fold, (trn_idx, val_idx) in enumerate(skf.split(d, y)):
     train_dataloader = DataLoader(
@@ -197,7 +197,7 @@ model = BertForSequenceClassification_pl.load_from_checkpoint(
 FINE_TUNED_MODEL_PATH = '/home/narita/Twitter/sig/text_fine_tuned_model_cased_512'
 
 model.bert_sc.save_pretrained(FINE_TUNED_MODEL_PATH)
-"""
+
 tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 FINE_TUNED_MODEL_PATH = '/home/narita/Twitter/sig/text_fine_tuned_model_cased_512'

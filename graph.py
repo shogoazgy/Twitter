@@ -250,16 +250,20 @@ def extact_random(paths, max_count=1000, prob=0.001):
 if __name__ == "__main__":
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/reply/2020_07_reply_clusters')
     #g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_07_clusters')
-    #paths = walk_dir('/home/narita/all_quote_2020_half1')
-    paths = walk_dir('/home/narita/2020-ex-rt-jp')
+    paths = walk_dir('/home/narita/immigration')
+    #paths = walk_dir('/home/narita/2020-ex-rt-jp')
     #g = build_network(paths, '2020_04_quote_all')
     #summary(g)
     #paths = walk_dir('/home/narita/Twitter/graphs/RT')
-    df = extact_random(paths, max_count=10000)
-    df['label'] = ['' for _ in range(len(df['quote']))]
-    df.to_csv('/home/narita/Twitter/quoted_annotate.csv')
-
-
+    #df = extact_random(paths, max_count=10000)
+    #df['label'] = ['' for _ in range(len(df['quote']))]
+    #df.to_csv('/home/narita/Twitter/quoted_annotate.csv')
+    g = build_network(paths, save_filename='immi_rt_graph', mode='retweet')
+    p = clustering(g)
+    g.vs['cluster'] = p.membership
+    summary(g)
+    p.quality()
+    save_gml(g, 'immi_rt_graph_clusters')
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
