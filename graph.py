@@ -263,7 +263,7 @@ def exped(paths):
 
 if __name__ == "__main__":
     paths = walk_dir('/home/narita/immigration')
-    
+    exped(paths)
     
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
