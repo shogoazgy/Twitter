@@ -262,6 +262,9 @@ if __name__ == "__main__":
     c = collections.Counter(g.vs['cluster'])
     for x in c.most_common(10):
         print(x)
+    p = clustering(g, resolution_parameter=0.5)
+    for i in range(10):
+        print(len(p[i]))
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
