@@ -262,7 +262,7 @@ if __name__ == "__main__":
     c = collections.Counter(g.vs['cluster'])
     for x in c.most_common(10):
         print(x)
-    p = clustering(g, resolution_parameter=0.5)
+    p = clustering(g, resolution_parameter=0.2)
     for i in range(10):
         print(len(p[i]))
     """
