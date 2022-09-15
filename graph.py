@@ -261,7 +261,7 @@ if __name__ == "__main__":
     p = clustering(g)
     g.vs['cluster'] = p.membership
     summary(g)
-    p.quality()
+    print(p.quality())
     save_gml(g, 'immi_rt_graph_clusters')
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
