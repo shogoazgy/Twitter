@@ -261,11 +261,35 @@ def exped(paths):
                         count += 1
     print(count)
 
+def extact(paths):
+    quoted = []
+    quote = []
+    quote_ids = []
+    count = 0
+    for path in paths:
+        with open(path, 'r') as f:
+            while True:
+                t = f.readline().strip()
+                if not t:
+                    break
+                t = json.loads(t)
+                if 'quoted_status' in t.keys():
+                    if t['text'][:2] != 'RT':
+                        try:
+                            quoted.append(t['quoted_status']['text'])
+                            quote.append(t['text'])
+                            quote_ids.append(t['id_str'])
+                            count += 1
+                            print(count)
+                        except:
+                            print('e')
+    return pd.DataFrame({'quote_id_str': quote_ids, 'quoted': quoted, 'quote': quote})
+
+
 
 if __name__ == "__main__":
     paths = walk_dir('/home/narita/immigration')
-    exped(paths)
-    
+    extact(paths)
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
