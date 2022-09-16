@@ -289,7 +289,9 @@ def extact(paths):
 
 if __name__ == "__main__":
     paths = walk_dir('/home/narita/immigration')
-    extact(paths)
+    ans = extact(paths)
+    ans['label'] = ['' for _ in range(len(ans['quote']))]
+    ans.to_csv('immi_anno.csv')
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
