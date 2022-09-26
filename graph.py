@@ -288,8 +288,9 @@ def extact(paths):
 
 
 if __name__ == "__main__":
-    paths = walk_dir('/home/narita/kokuso')
-    g = build_network(paths, 'kokuso', mode='retweet')
+    #paths = walk_dir('/home/narita/kokuso')
+    #g = build_network(paths, 'kokuso', mode='retweet')
+    g = Graph.Read_GML('kokuso')
     summary(g)
     p = clustering(g)
     g.vs['cluster'] = p.membership
@@ -297,7 +298,7 @@ if __name__ == "__main__":
     print(p.quality() / sum(cal_strength(g)))
     for i in range(10):
         print(len(p[i]))
-    save_gml('kokuso_clusters_rp_1')
+    save_gml(g, 'kokuso_clusters_rp_1')
 
     p = clustering(g, resolution_parameter=0.5)
     g.vs['cluster'] = p.membership
@@ -305,7 +306,7 @@ if __name__ == "__main__":
     print(p.quality() / sum(cal_strength(g)))
     for i in range(10):
         print(len(p[i]))
-    save_gml('kokuso_clusters_rp_05')
+    save_gml(g, 'kokuso_clusters_rp_05')
 
     p = clustering(g, resolution_parameter=0.25)
     g.vs['cluster'] = p.membership
@@ -313,7 +314,7 @@ if __name__ == "__main__":
     print(p.quality() / sum(cal_strength(g)))
     for i in range(10):
         print(len(p[i]))
-    save_gml('kokuso_clusters_rp_025')
+    save_gml(g, 'kokuso_clusters_rp_025')
 
     #ans = extact(paths)
     #ans['label'] = ['' for _ in range(len(ans['quote']))]
