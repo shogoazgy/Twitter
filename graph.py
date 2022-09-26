@@ -290,9 +290,13 @@ def extact(paths):
 if __name__ == "__main__":
     paths = walk_dir('/home/narita/kokuso')
     #g = build_network(paths, 'kokuso', mode='retweet')
-    """
-    g = Graph.Read_GML('kokuso')
+    
+    g = Graph.Read_GML('kokuso_clusters_rp_05')
     summary(g)
+    p = clustering(g, resolution_parameter=0.5)
+    for i in range(10):
+        print(len(p[i]))
+    """
     p = clustering(g)
     g.vs['cluster'] = p.membership
     print('rp 1')
