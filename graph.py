@@ -288,8 +288,9 @@ def extact(paths):
 
 
 if __name__ == "__main__":
-    #paths = walk_dir('/home/narita/kokuso')
+    paths = walk_dir('/home/narita/kokuso')
     #g = build_network(paths, 'kokuso', mode='retweet')
+    """
     g = Graph.Read_GML('kokuso')
     summary(g)
     p = clustering(g)
@@ -315,10 +316,10 @@ if __name__ == "__main__":
     for i in range(10):
         print(len(p[i]))
     save_gml(g, 'kokuso_clusters_rp_025')
-
-    #ans = extact(paths)
-    #ans['label'] = ['' for _ in range(len(ans['quote']))]
-    #ans.to_csv('immi_anno.csv')
+    """
+    ans = extact(paths)
+    ans['label'] = ['' for _ in range(len(ans['quote']))]
+    ans.to_csv('kokuso_anno.csv')
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
