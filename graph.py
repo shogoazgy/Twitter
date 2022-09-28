@@ -292,10 +292,8 @@ if __name__ == "__main__":
     #g = build_network(paths, 'kokuso', mode='retweet')
     
     g = Graph.Read_GML('kokuso_clusters_rp_05')
-    summary(g)
-    p = clustering(g, resolution_parameter=0.5)
-    for i in range(10):
-        print(len(p[i]))
+    df = extact_random(paths, max_count=1500, prob=0.005)
+    df.to_csv('kokuso_anno_1500.csv')
     """
     p = clustering(g)
     g.vs['cluster'] = p.membership
@@ -321,9 +319,9 @@ if __name__ == "__main__":
         print(len(p[i]))
     save_gml(g, 'kokuso_clusters_rp_025')
     """
-    ans = extact(paths)
-    ans['label'] = ['' for _ in range(len(ans['quote']))]
-    ans.to_csv('kokuso_anno.csv')
+    #ans = extact(paths)
+    #ans['label'] = ['' for _ in range(len(ans['quote']))]
+    #ans.to_csv('kokuso_anno.csv')
     """
     # RTでコロナが含まれている場合の引用RTグラフの構築
     g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
