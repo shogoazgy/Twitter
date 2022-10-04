@@ -292,8 +292,8 @@ if __name__ == "__main__":
     #g = build_network(paths, 'kokuso', mode='retweet')
     
     g = Graph.Read_GML('kokuso_clusters_rp_05')
-    df = extact_random(paths, max_count=1500, prob=0.005)
-    df.to_csv('kokuso_anno_1500.csv')
+    df = extact_random(paths, max_count=3000, prob=0.005)
+    df.to_csv('kokuso_anno.csv')
     """
     p = clustering(g)
     g.vs['cluster'] = p.membership
