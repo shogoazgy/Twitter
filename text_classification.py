@@ -35,7 +35,7 @@ train_first_list = []
 df_list = []
 #bert_model.to(device)
 def get_vector(word):
-    x = tokenizer(word, return_tensors="np", max_length=512, truncation=True, padding="max_length").to(device)
+    x = tokenizer(word, return_tensors="np", max_length=512, truncation=True, padding="max_length")
     outputs = bert_model(**x)
     return outputs.last_hidden_state[0][1]
 for i, t in enumerate(tqdm(train)):
