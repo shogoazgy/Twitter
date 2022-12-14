@@ -1,7 +1,7 @@
 import json
-from sklearn.model_selection import train_test_split, cross_val_score, KFold, StratifiedKFold
-from sklearn.metrics import roc_auc_score, precision_recall_curve, roc_curve, average_precision_score, f1_score
-from sklearn.decomposition import PCA
+#from sklearn.model_selection import train_test_split, cross_val_score, KFold, StratifiedKFold
+#from sklearn.metrics import roc_auc_score, precision_recall_curve, roc_curve, average_precision_score, f1_score
+#from sklearn.decomposition import PCA
 import torch
 import pandas as pd
 import numpy as np
@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 from transformers import BertJapaneseTokenizer
 from transformers import BertModel
-from lightgbm import LGBMClassifier
+#from lightgbm import LGBMClassifier
 import pickle
 
 with open('/home/narita/data2/test_q.json') as f:
