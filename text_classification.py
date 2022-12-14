@@ -30,17 +30,12 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 tokenizer = BertJapaneseTokenizer.from_pretrained('cl-tohoku/bert-base-japanese-whole-word-masking')
 bert_model = BertModel.from_pretrained('cl-tohoku/bert-base-japanese-whole-word-masking')
 
-def get_vector(word):
-    x = tokenizer(word, return_tensors="np")
-    outputs = bert_model(**x)
-    return outputs.last_hidden_state[0][1].detach().numpy()
-
 train_sum_list = []
 train_first_list = []
 df_list = []
 bert_model.to(device)
 def get_vector(word):
-    x = tokenizer(word, return_tensors="pt", max_length=512, truncation=True, padding="max_length").to(device)
+    x = tokenizer(word, return_tensors="np", max_length=512, truncation=True, padding="max_length").to(device)
     outputs = bert_model(**x)
     return outputs.last_hidden_state[0][1]
 for i, t in enumerate(tqdm(train)):
