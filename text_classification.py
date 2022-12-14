@@ -37,7 +37,7 @@ df_list = []
 def get_vector(word):
     x = tokenizer(word, return_tensors="pt", max_length=512, truncation=True, padding="max_length")
     outputs = bert_model(**x)
-    return outputs.last_hidden_state[0][1].detach().nunpy()
+    return outputs.last_hidden_state[0][1].detach().numpy()
 for i, t in enumerate(tqdm(train)):
     for c in t['candidates']:
         if c == t['ans_id']:
