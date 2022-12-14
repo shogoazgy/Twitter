@@ -31,7 +31,7 @@ tokenizer = BertJapaneseTokenizer.from_pretrained('cl-tohoku/bert-base-japanese-
 bert_model = BertModel.from_pretrained('cl-tohoku/bert-base-japanese-whole-word-masking')
 
 def get_vector(word):
-    x = tokenizer(word, return_tensors="pt")
+    x = tokenizer(word, return_tensors="np")
     outputs = bert_model(**x)
     return outputs.last_hidden_state[0][1].detach().numpy()
 
@@ -42,7 +42,7 @@ bert_model.to(device)
 def get_vector(word):
     x = tokenizer(word, return_tensors="pt", max_length=512, truncation=True, padding="max_length").to(device)
     outputs = bert_model(**x)
-    return outputs.last_hidden_state[0][1].numpy()
+    return outputs.last_hidden_state[0][1]
 for i, t in enumerate(tqdm(train)):
     for c in t['candidates']:
         if c == t['ans_id']:
