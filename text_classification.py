@@ -25,7 +25,7 @@ data_dict = {}
 for d in data:
   data_dict[d[0]] = d[1]
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+#device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 tokenizer = BertJapaneseTokenizer.from_pretrained('cl-tohoku/bert-base-japanese-whole-word-masking')
 bert_model = BertModel.from_pretrained('cl-tohoku/bert-base-japanese-whole-word-masking')
@@ -33,7 +33,7 @@ bert_model = BertModel.from_pretrained('cl-tohoku/bert-base-japanese-whole-word-
 train_sum_list = []
 train_first_list = []
 df_list = []
-bert_model.to(device)
+#bert_model.to(device)
 def get_vector(word):
     x = tokenizer(word, return_tensors="np", max_length=512, truncation=True, padding="max_length").to(device)
     outputs = bert_model(**x)
