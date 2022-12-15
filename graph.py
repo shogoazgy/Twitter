@@ -304,8 +304,8 @@ def extact(paths):
 
 
 if __name__ == "__main__":
-    paths = walk_dir('/home/narita/kokuso')
-    g = build_network(paths, 'kokuso_graphs/', mode='retweet', days=7)
+    paths = walk_dir('/home/narita/immigration')
+    g = build_network(paths, 'immigration_graphs/', mode='retweet', days=7)
     
     #g = Graph.Read_GML('kokuso_clusters_rp_05')
     #df = extact_random(paths, max_count=3000, prob=0.005)
