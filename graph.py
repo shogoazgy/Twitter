@@ -13,6 +13,7 @@ import sys
 import subprocess
 import pickle
 import random
+import datetime
 #from sklearn.linear_model import LinearRegression
 
 def count_lines(path):
@@ -101,10 +102,25 @@ def sort_max_print(subg, centrality, guest_token, len=10):
         ind = centrality.index(cen_sorted[i])
         print(id_to_screen_name(subg.vs[ind]['name'], guest_token=guest_token))
 
-def build_network(paths, save_filename, mode='quoted'):
+def build_network(paths, save_filename, mode='quoted', days=None, months=None):
     rt_user_list = []
-    c = 0
+    gs = []
+    if days:
+        start_date = datetime.datetime.strptime(paths[0].split('/')[-1].split('.')[0], '%Y-%m-%d')
     for path in paths:
+        date = datetime.datetime.strptime(path.split('/')[-1].split('.')[0], '%Y-%m-%d')
+        if date.day - start_date.day >= days:
+            c = collections.Counter(rt_user_list)
+            rt_user_list = []
+            to_from_freq_list = []
+            for k in c.most_common():
+                to_from_freq = k[0].split(',')
+                to_from_freq.append(k[1])
+                to_from_freq_list.append(to_from_freq)
+            g = Graph.TupleList(to_from_freq_list, weights=True, directed=True)
+            g.save(save_filename + '_' + start_date.strftime('%Y-%m-%d') + '_' + (date - datetime.timedelta(days=1)).strftime('%Y-%m-%d'), format='gml')
+            gs.append([g, start_date.strftime('%Y-%m-%d') + '_' + (date - datetime.timedelta(days=1)).strftime('%Y-%m-%d')])
+            print('next')
         print(path)
         with open(path, 'r') as f:
             while True:
@@ -133,8 +149,9 @@ def build_network(paths, save_filename, mode='quoted'):
         to_from_freq.append(k[1])
         to_from_freq_list.append(to_from_freq)
     g = Graph.TupleList(to_from_freq_list, weights=True, directed=True)
-    g.save(save_filename, format='gml')
-    return g
+    g.save(save_filename + '_' + start_date.strftime('%Y-%m-%d') + '_' + date.strftime('%Y-%m-%d'), format='gml')
+    gs.append([g, start_date.strftime('%Y-%m-%d') + '_' + date.strftime('%Y-%m-%d')])
+    return gs
 
 def walk_dir(path_origin):
     paths = []
@@ -285,13 +302,14 @@ def extact(paths):
 
 
 
+
 if __name__ == "__main__":
     paths = walk_dir('/home/narita/kokuso')
-    #g = build_network(paths, 'kokuso', mode='retweet')
+    g = build_network(paths, 'kokuso_graphs/', mode='retweet', days=7)
     
-    g = Graph.Read_GML('kokuso_clusters_rp_05')
-    df = extact_random(paths, max_count=3000, prob=0.005)
-    df.to_csv('kokuso_anno.csv')
+    #g = Graph.Read_GML('kokuso_clusters_rp_05')
+    #df = extact_random(paths, max_count=3000, prob=0.005)
+    #df.to_csv('kokuso_anno.csv')
     """
     p = clustering(g)
     g.vs['cluster'] = p.membership
