@@ -109,7 +109,7 @@ def build_network(paths, save_filename, mode='quoted', days=None, months=None):
         start_date = datetime.datetime.strptime(paths[0].split('/')[-1].split('.')[0], '%Y-%m-%d')
     for path in paths:
         date = datetime.datetime.strptime(path.split('/')[-1].split('.')[0], '%Y-%m-%d')
-        if date.day - start_date.day >= days:
+        if (date - start_date).days >= days:
             c = collections.Counter(rt_user_list)
             rt_user_list = []
             to_from_freq_list = []
@@ -118,7 +118,7 @@ def build_network(paths, save_filename, mode='quoted', days=None, months=None):
                 to_from_freq.append(k[1])
                 to_from_freq_list.append(to_from_freq)
             g = Graph.TupleList(to_from_freq_list, weights=True, directed=True)
-            g.save(save_filename + '_' + start_date.strftime('%Y-%m-%d') + '_' + (date - datetime.timedelta(days=1)).strftime('%Y-%m-%d'), format='gml')
+            g.save(save_filename + start_date.strftime('%Y-%m-%d') + '_' + (date - datetime.timedelta(days=1)).strftime('%Y-%m-%d'), format='gml')
             gs.append([g, start_date.strftime('%Y-%m-%d') + '_' + (date - datetime.timedelta(days=1)).strftime('%Y-%m-%d')])
             start_date = date
             print('next')
@@ -141,7 +141,6 @@ def build_network(paths, save_filename, mode='quoted', days=None, months=None):
                 elif mode == 'reply':
                     if tweet['in_reply_to_user_id_str'] is not None:
                         rt_user_list.append(tweet['user']['id_str'] + ',' + tweet['in_reply_to_user_id_str'])
-    print('無効なツイート: ' + str(c))
     c = collections.Counter(rt_user_list)
     del rt_user_list
     to_from_freq_list = []
@@ -311,130 +310,3 @@ if __name__ == "__main__":
     #g = Graph.Read_GML('kokuso_clusters_rp_05')
     #df = extact_random(paths, max_count=3000, prob=0.005)
     #df.to_csv('kokuso_anno.csv')
-    """
-    p = clustering(g)
-    g.vs['cluster'] = p.membership
-    print('rp 1')
-    print(p.quality() / sum(cal_strength(g)))
-    for i in range(10):
-        print(len(p[i]))
-    save_gml(g, 'kokuso_clusters_rp_1')
-
-    p = clustering(g, resolution_parameter=0.5)
-    g.vs['cluster'] = p.membership
-    print('rp 0.5')
-    print(p.quality() / sum(cal_strength(g)))
-    for i in range(10):
-        print(len(p[i]))
-    save_gml(g, 'kokuso_clusters_rp_05')
-
-    p = clustering(g, resolution_parameter=0.25)
-    g.vs['cluster'] = p.membership
-    print('rp 0.25')
-    print(p.quality() / sum(cal_strength(g)))
-    for i in range(10):
-        print(len(p[i]))
-    save_gml(g, 'kokuso_clusters_rp_025')
-    """
-    #ans = extact(paths)
-    #ans['label'] = ['' for _ in range(len(ans['quote']))]
-    #ans.to_csv('kokuso_anno.csv')
-    """
-    # RTでコロナが含まれている場合の引用RTグラフの構築
-    g = Graph.Read_GML('/home/narita/Twitter/graphs/RT/2020_06_clusters')
-    paths = walk_dir('/home/narita/covid_2020_06')
-    tweet_set = set()
-    for path in paths:
-        with open(path, 'r') as f:
-            while True:
-                tweet = f.readline().strip()
-                if not tweet:
-                    break
-                tweet = json.loads(tweet)
-                if 'retweeted_status' in tweet.keys():
-                    tweet_set.add(tweet['retweeted_status']['id_str'])
-    vs = []
-    for i in range(6):
-        vs.extend(g.vs.select(lambda vertex : vertex['cluster'] == i))
-    g = subgraph(g, vs)
-    summary(g)
-    v_set = set(g.vs['name'])
-    paths = walk_dir('/home/narita/all_quote_2020_half1')
-    e_list = []
-    for path in paths:
-        print(path[-12:-10])
-        if path[-12:-10] == '06':
-            with open(path, 'r') as f:
-                while True:
-                    tweet = f.readline().strip()
-                    if not tweet:
-                        break
-                    tweet = json.loads(tweet)
-                    if tweet['user']['id_str'] in v_set and tweet['quoted_status']['user']['id_str'] in v_set:
-                        if tweet['quoted_status']['id_str'] in tweet_set:
-                            e_list.append(tweet['user']['id_str'] + ',' + tweet['quoted_status']['user']['id_str'])
-    c = collections.Counter(e_list)
-    del e_list
-    to_from_freq_list = []
-    weight_list = []
-    for k in c.most_common():
-        to_from_freq = k[0].split(',')
-        to_from_freq_list.append(to_from_freq)
-        weight_list.append(k[1])
-    e_weight = g.es['weight']
-    e_size = len(g.es['weight'])
-
-    g.add_edges(to_from_freq_list)
-    g.es['weight'] = e_weight + weight_list
-    g.es['type'] = ['rt' if i < e_size else 'quote' for i in range(len(g.es['weight']))]
-    save_gml(g, '06_test_x')
-    """
-    """
-    g = Graph.Read_GML('/home/narita/Twitter/06_test_x')
-    print('2020_06_test_x')
-    summary(g)
-    sys.stdout.flush()
-
-    strength = cal_strength(g)
-    pal = igraph.drawing.colors.ClusterColoringPalette(10)
-    for x in pal:
-        print(x)
-    visual_style = {}
-    #visual_style["vertex_size"] = 3
-    visual_style["vertex_size"] = [2 if i ==0 else int(i**0.1)+2 for i in strength]
-    visual_style["vertex_frame_width"] = 0
-    visual_style["edge_width"] = [int((x/2)**0.4) * 0.1 for x in g.es["weight"]]
-    visual_style["vertex_color"] = pal.get_many(g.vs['cluster'])
-    print(set(visual_style['vertex_color']))
-    visual_style['vertex_color'] = [pal[6] if x == (1.0, 0.0, 0.0, 1.0) else x for x in visual_style['vertex_color']]
-    print(set(visual_style['vertex_color']))
-    
-    sys.stdout.flush()
-
-    #visual_style["edge_width"] = 1
-    #visual_style["vertex_label"] = subg.vs["label"]
-    visual_style['edge_arrow_size'] = 1/150
-    visual_style['edge_arrow_width'] = 1/100
-    #visual_style['vertex_shape'] = 'hidden'
-    visual_style['layout'] = "drl"
-    visual_style["bbox"] = (1200, 1200)
-    visual_style["edge_color"] = ['red' if x == 'quote' else 'gray' for x in g.es['type']]
-    print('drawing')
-    igraph.plot(g, '2020_06_quote_rt_color_6.png', **visual_style)
-    print('finish')
-    """
-    """
-    all_paths = walk_dir('/home/narita/2020-ex-rt-jp')
-    paths = []
-    pre_month = ''
-    rt_result = {}
-    quoted_result = {}
-    reply_result = {}
-    info_list = ['term', 'node', 'edge', 'sum edge', 'modurality', 'community edge ratio']
-    for info in info_list:
-        rt_result[info] = []
-        quoted_result[info] = []
-        reply_result[info] = []
-    #quoted_result['community edge ratio (RT network)'] = []
-    #reply_result['community edge ratio (RT network)'] = []
-    """
