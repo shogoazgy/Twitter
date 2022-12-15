@@ -120,6 +120,7 @@ def build_network(paths, save_filename, mode='quoted', days=None, months=None):
             g = Graph.TupleList(to_from_freq_list, weights=True, directed=True)
             g.save(save_filename + '_' + start_date.strftime('%Y-%m-%d') + '_' + (date - datetime.timedelta(days=1)).strftime('%Y-%m-%d'), format='gml')
             gs.append([g, start_date.strftime('%Y-%m-%d') + '_' + (date - datetime.timedelta(days=1)).strftime('%Y-%m-%d')])
+            start_date = date
             print('next')
         print(path)
         with open(path, 'r') as f:
