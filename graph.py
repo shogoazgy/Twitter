@@ -149,7 +149,7 @@ def build_network(paths, save_filename, mode='quoted', days=None, months=None):
         to_from_freq.append(k[1])
         to_from_freq_list.append(to_from_freq)
     g = Graph.TupleList(to_from_freq_list, weights=True, directed=True)
-    g.save(save_filename + '_' + start_date.strftime('%Y-%m-%d') + '_' + date.strftime('%Y-%m-%d'), format='gml')
+    g.save(save_filename + start_date.strftime('%Y-%m-%d') + '_' + date.strftime('%Y-%m-%d'), format='gml')
     gs.append([g, start_date.strftime('%Y-%m-%d') + '_' + date.strftime('%Y-%m-%d')])
     return gs
 
@@ -304,8 +304,8 @@ def extact(paths):
 
 
 if __name__ == "__main__":
-    paths = walk_dir('/home/narita/immigration')
-    g = build_network(paths, 'immigration_graphs/', mode='retweet', days=7)
+    paths = walk_dir('/home/narita/covid-07_09')
+    g = build_network(paths, 'covid_graphs/', mode='retweet', days=7)
     
     #g = Graph.Read_GML('kokuso_clusters_rp_05')
     #df = extact_random(paths, max_count=3000, prob=0.005)
