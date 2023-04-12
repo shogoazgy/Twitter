@@ -38,7 +38,7 @@ for path in paths:
             if not tweet:
                 break
             tweet = json.loads(tweet)
-            if tweet['is_quote_status'] == True:
+            if 'is_quote_status' in tweet.keys() and tweet['is_quote_status'] == True:
                 try:
                     tweetid_userid_dict[tweet['quoted_status']['id_str']].append(tweet['user']['id_str'])
                     tweetid_text_dict[tweet['quoted_status']['id_str']] = tweet['quoted_status']['text']
