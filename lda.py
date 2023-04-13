@@ -57,7 +57,7 @@ def remove_url(text):
     return re.sub(r'http\S+', '', text)
 
 # Mecabで形態素解析
-m = Tagger()
+m = Tagger('-Ochasen -d /usr/lib64/mecab/dic/mecab-ipadic-neologd/')
 tokenized_texts = []
 for text in tweetid_text_dict.values():
     tokens = m.parse(text).splitlines()
