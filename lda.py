@@ -93,7 +93,7 @@ num_topics_list = range(1, 21)
 coherence_vals = []
 perplexity_vals = []
 
-# 各トピック数に対して交差検証を行う
+# 各トピック数に対してモデルを作成し、Coherenceスコアを計算
 for num_topics in num_topics_list:
     # Coherenceスコアのリスト
     coherence_scores = []
@@ -103,8 +103,10 @@ for num_topics in num_topics_list:
     cm = models.coherencemodel.CoherenceModel(model=model, corpus=corpus, dictionary=dictionary, coherence='u_mass')
     coherence_vals.append(cm.get_coherence())
     perplexity_vals.append(np.exp(-model.log_perplexity(corpus)))
+    print(str(num_topics), cm.get_coherence())
 
 # 最適なトピック数とそのスコアを表示
+print("最適なトピック数: ", coherence_vals.index(max(coherence_vals)) + 1)
 best_model = models.ldamodel.LdaModel(corpus=corpus, id2word=dictionary, num_topics=(coherence_vals.index(max(coherence_vals))) + 1, passes=1)
 
 topicid_userid_dict = defaultdict(list)
