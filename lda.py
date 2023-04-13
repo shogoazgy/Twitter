@@ -33,6 +33,7 @@ tweetid_userid_dict = defaultdict(list)
 paths = get_file_pathes(data_path)
 for path in paths:
     with open(path, 'r') as f:
+        print(path)
         while True:
             tweet = f.readline().strip()
             if not tweet:
