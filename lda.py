@@ -5,13 +5,19 @@ import re
 import sys
 import itertools
 import json
+import numpy as np
+import time
 from collections import defaultdict
 from gensim import corpora, models
 from gensim.models.coherencemodel import CoherenceModel
 from MeCab import Tagger
 from sklearn.model_selection import GridSearchCV
 
-data_path = '/home/narita/covid-07_09'
+data_path = '/home/narita/no-keywors_test/'
+
+m = Tagger('-Ochasen -d /usr/lib64/mecab/dic/mecab-ipadic-neologd/')
+
+stop_words = ['する', 'ある', 'なる', 'さん', 'いる', 'これ', 'それ']
 
 # get all the file pathes in the direcotory
 def get_file_pathes(directory):
@@ -21,15 +27,13 @@ def get_file_pathes(directory):
             file_pathes.append(os.path.join(root, file))
     return file_pathes
 
-# ログの設定
-logging.basicConfig(level=logging.INFO)
+#
 
 # read text from tweets
 tweetid_text_dict = dict()
 tweetid_userid_dict = defaultdict(list)
 
-
-
+start = time.time()
 paths = get_file_pathes(data_path)
 for path in paths:
     with open(path, 'r') as f:
@@ -52,15 +56,22 @@ for path in paths:
                 tweetid_userid_dict[tweet['id_str']].append(tweet['user']['id_str'])
                 tweetid_text_dict[tweet['id_str']] = tweet['text']
 
+end = time.time()
+print('read text from tweets time')
+print(end - start)
+
 # remove urls
 def remove_url(text):
+    text = re.sub(r"[0-9０-９]+", "", text)
+    text = re.sub(r'@\S+', '', text)
+    text = text.lower()
     return re.sub(r'http\S+', '', text)
 
+start = time.time()
 # Mecabで形態素解析
-m = Tagger('-Ochasen -d /usr/lib64/mecab/dic/mecab-ipadic-neologd/')
 tokenized_texts = []
 for text in tweetid_text_dict.values():
-    tokens = m.parse(text).splitlines()
+    tokens = m.parse(remove_url(text)).splitlines()
     words = []
     for token in tokens:
         if token == "EOS" or token == "":
@@ -69,22 +80,38 @@ for text in tweetid_text_dict.values():
         parts = token.split("\t")
         if parts == "":
             continue
-        # 表層形と品詞を取得
-        surface = parts[0]
         if len(parts) < 4:
             continue
-        if len(parts[4].split("-")) == 0:
+        # 表層形と品詞を取得
+        surface = parts[2]
+        if surface in stop_words:
+            continue
+        if len(parts[3].split("-")) == 0:
             print(parts)
-        pos = parts[4].split("-")[0]
-        # 品詞が名詞動詞形容詞ならリストに追加
-        if pos in ["名詞", "動詞", "形容詞"]:
+        pos = parts[3].split("-")[0]
+        # 品詞が名詞、動詞の自立、形容詞ならリストに追加
+        if pos == '名詞':
+            if parts[3].split("-")[1] == '代名詞' or parts[3].split("-")[1] == '非自立':
+                continue
             if re.match(r'^\w+$', surface):
+                if 'コロナ' in surface or 'ウイルス' in surface or 'ウィルス' in surface:
+                    continue
                 words.append(surface)
+        if pos == '動詞' or pos == '形容詞':
+            if parts[3].split("-")[1] == '自立':
+                if re.match(r'^\w+$', surface):
+                    if 'コロナ' in surface or 'ウイルス' in surface or 'ウィルス' in surface:
+                        continue
+                    words.append(surface)
     tokenized_texts.append(words)
 
+end = time.time()
+print('mecab time')
+print(end - start)
+
 # 単語の出現回数をカウントする辞書の作成
-dictionary = corpora.Dictionary(tokenized_texts)
-dictionary.filter_extremes(no_below=5, no_above=0.5) # あまり出現しない単語や頻出する単語は除く
+dictionary = corpora.Dictionary(tokenized_texts, prune_at=None)
+dictionary.filter_extremes(no_below=100, no_above=0.5) # あまり出現しない単語や頻出する単語は除く
 
 # コーパスの作成（各文書を単語IDと出現回数のペアのリストに変換）
 corpus = [dictionary.doc2bow(text) for text in tokenized_texts]
@@ -94,17 +121,27 @@ num_topics_list = range(1, 21)
 coherence_vals = []
 perplexity_vals = []
 
+start = time.time()
 # 各トピック数に対してモデルを作成し、Coherenceスコアを計算
 for num_topics in num_topics_list:
+    if num_topics % 20 == 0:
+        coherence_vals.append(-10)
+        perplexity_vals.append(-10)
+        continue
     # Coherenceスコアのリスト
     coherence_scores = []
     perplexity_scores = []
 
     model = models.ldamodel.LdaModel(corpus=corpus, id2word=dictionary, num_topics=num_topics, passes=1)
-    cm = models.coherencemodel.CoherenceModel(model=model, corpus=corpus, dictionary=dictionary, coherence='u_mass')
-    coherence_vals.append(cm.get_coherence())
+    #cm = models.coherencemodel.CoherenceModel(model=model, corpus=corpus, dictionary=dictionary, coherence='u_mass')
+    cm = models.coherencemodel.CoherenceModel(model=model, texts=tokenized_texts, dictionary=dictionary, coherence='c_v')
+    coherence_vals.append(abs(cm.get_coherence()))
     perplexity_vals.append(np.exp(-model.log_perplexity(corpus)))
-    print(str(num_topics), cm.get_coherence())
+    print(str(num_topics), abs(cm.get_coherence()))
+
+end = time.time()
+print('coherence time')
+print(end - start)
 
 # 最適なトピック数とそのスコアを表示
 print("最適なトピック数: ", coherence_vals.index(max(coherence_vals)) + 1)
@@ -129,6 +166,21 @@ for topic1, topic2 in itertools.combinations(topicid_userid_dict.keys(), 2):
 
 sorted_topic1_topic2_simpson_tuple = sorted(topic1_topic2_simpson_dict.items(), key=lambda x: x[1], reverse=True)
 
-for topic1_topic2, simpson in sorted_topic1_topic2_simpson_tuple[:10]:
+for topic1_topic2, simpson in sorted_topic1_topic2_simpson_tuple[:30]:
     print(topic1_topic2, simpson)
 
+print('AAA')
+
+for i in range(coherence_vals.index(max(coherence_vals)) + 1):
+    #items = [(dictionary[t[0]], t[1]) for t in best_model.get_topic_terms(i, topn = 15)]
+    items = [dictionary[t[0]] for t in best_model.get_topic_terms(i, topn = 15)]
+    print(f"topic_id = {i}, items = {items}")
+
+"""
+for t in range(num_topics):
+    word=[]
+    for i, prob in best_model.get_topic_terms(t, topn=15):
+        word.append(dictionary.id2token[int(i)])
+    print(i)
+    print(words)
+"""
